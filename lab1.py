@@ -13,8 +13,8 @@ while h_cylinder <= 0:
     print('\nError occurred. Parameter must be greater than 0.')
     h_cylinder = float(input("The height of the cylinder is: "))
 
-s_prism_base = math.sin(360 / 5 * math.pi / 180) * r_cylinder * 5  # Square of the prism base
-v_prism = h_cylinder * s_prism_base  # Valume of the prism
+s_prism_base = math.sin(2 / 5 * math.pi) * r_cylinder * 5  # Square of the prism base
+v_prism = h_cylinder * s_prism_base  # Volume of the prism
 
 a_prism = math.sqrt(2 * r_cylinder ** 2 - 2 * r_cylinder ** 2 * math.cos(72 * math.pi / 180))  # Side of the prism base
 s_prism_side_area = a_prism * h_cylinder * 5  # Square of the prism side area
