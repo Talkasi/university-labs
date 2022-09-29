@@ -10,14 +10,14 @@ if a == 0:  # Special cases
         if c == 0:
             print("\nx can be any value.")
         else:
-            print("\nThere is no solution.")  # there is no x solving it
+            print("\nThere are no solutions.")  # there is no x solving it
     else:
         x = -c / b
         print("\nThe answer is {:.7g}.".format(x))
 else:
     d = b ** 2 - 4 * a * c  # discriminant
     if d < 0:
-        print("\nThere is no solution.")  # there is no x solving it
+        print("\nThere are no solutions.")  # there is no x solving it
     elif d == 0:
         x = -b / 2 / a
         print("\nThere is one solution: {:.7g}.".format(x))

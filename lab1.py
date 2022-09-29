@@ -1,5 +1,4 @@
 # Kuracheva Ksenia, ИУ7-13Б
-# V14: Пятиугольная правильная призма, вписанная в цилиндр (даны параметры цилиндра R, h, найти V, Sполн, Sбок).
 import math
 
 print('\tInput area <-> Data\n')
@@ -13,15 +12,15 @@ while h_cylinder <= 0:
     print('\nError occurred. Parameter must be greater than 0.')
     h_cylinder = float(input("The height of the cylinder is: "))
 
-s_prism_base = math.sin(2 / 5 * math.pi) * r_cylinder * 5  # Square of the prism base
+s_prism_base = math.sin(2 / 5 * math.pi) * r_cylinder * 5  # Area of the prism base
 v_prism = h_cylinder * s_prism_base  # Volume of the prism
 
 a_prism = math.sqrt(2 * r_cylinder ** 2 - 2 * r_cylinder ** 2 * math.cos(72 * math.pi / 180))  # Side of the prism base
-s_prism_side_area = a_prism * h_cylinder * 5  # Square of the prism side area
+s_prism_side_area = a_prism * h_cylinder * 5  # Prism side area
 
-s_prism = s_prism_side_area + s_prism_base  # Square of the prism
+s_prism = s_prism_side_area + s_prism_base  # Area of the prism
 
 print('\n\tOutput area <-> Result\n')
 print('The volume of the prism is {:.5g}.'.format(v_prism))
-print('The square of the prism is {:.5g}.'.format(s_prism))
-print('The square of the side area of the prism is {:.5g}.'.format(s_prism_side_area))
+print('The area of the prism is {:.5g}.'.format(s_prism))
+print('The side area of the prism is {:.5g}.'.format(s_prism_side_area))

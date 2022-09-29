@@ -53,12 +53,12 @@ if 0 <= x <= 8:
         print("This point is in the area of the right lower wing.")
 
 # Right mustache
-if 0 <= x <= 2 and y == 3 / 2 * x + 2:
+if 0 <= x <= 2 and (y == 3 / 2 * x + 2):
     status = 1
     print("This point is on the right mustache.")
 
 # Left mustache
-if -2 <= x <= 0 and y == - 3 / 2 * x + 2:
+if -2 <= x <= 0 and (y == - 3 / 2 * x + 2):
     status = 1
     print("This point is on the left mustache.")
 
