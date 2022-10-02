@@ -1,14 +1,16 @@
+# Compute sides and median length of the triangle, check if it is isosceles.
+# Check if new point is in the area of the given triangle and count the minimal distance if it is.
 eps = 1e-9
 
 while True:
-    x1 = float(input("Enter x of the first point: "))
-    y1 = float(input("Enter y of the first point: "))
+    x1 = int(input("Enter x of the first point: "))
+    y1 = int(input("Enter y of the first point: "))
 
-    x2 = float(input("\nEnter x of the second point: "))
-    y2 = float(input("Enter y of the second point: "))
+    x2 = int(input("\nEnter x of the second point: "))
+    y2 = int(input("Enter y of the second point: "))
 
-    x3 = float(input("\nEnter x of the third point: "))
-    y3 = float(input("Enter y of the third point: "))
+    x3 = int(input("\nEnter x of the third point: "))
+    y3 = int(input("Enter y of the third point: "))
 
     # Compute sides of the triangle
     side1 = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
@@ -41,8 +43,8 @@ if max_side - middle_side <= eps or middle_side - min_side <= eps:
 else:
     print("\nThis triangle isn't isosceles.")
 
-x = float(input("\nEnter x of the point to check: "))
-y = float(input("Enter y of the point to check: "))
+x = int(input("\nEnter x of the point to check: "))
+y = int(input("Enter y of the point to check: "))
 
 # Compute a distance from the point to the triangle vertices
 side1_additional = ((x1 - x) ** 2 + (y1 - y) ** 2) ** 0.5
