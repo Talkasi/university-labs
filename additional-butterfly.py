@@ -1,3 +1,4 @@
+# Find out in what part of the butterfly the point is
 x = float(input("Enter x: "))
 y = float(input("Enter y: "))
 status = 0
