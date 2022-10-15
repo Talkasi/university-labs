@@ -1,10 +1,16 @@
-# Kuracheva K.D., ИУ7-13Б, V70
+# Kuracheva K.D., ИУ7-13Б
+# Computes sum of the function V70
 import math
 
 x = float(input("Enter x: "))
-eps = float(input("Enter eps: "))
-iterations_max = float(input("Enter max number of iterations: "))
-step = float(input("Enter step for table to print: "))
+eps = abs(float(input("Enter eps: ")))
+iterations_max = int(input("Enter max number of iterations: "))
+while iterations_max <= 0:
+    iterations_max = int(input("This number shouldn't be less then 1.\nEnter max number of iterations: "))
+
+step = int(input("Enter step for table to print: "))
+while step <= 0:
+    step = int(input("This number shouldn't be less then 1.\nEnter step for table to print: "))
 
 # Print a table of values for the function
 print("┌───────────┬────────────────────────┬────────────────────────┐")
@@ -17,7 +23,7 @@ s_current = x
 t_current = x
 print("│_{:9d} │_ {:20.7g}  │_ {:20.7g}  │".format(n, t_current, s_current))
 
-while n < iterations_max and abs(t_current) >= eps:
+while n < iterations_max and abs(t_current) > eps:
     n += 1
     s_previous = s_current
 
@@ -31,15 +37,15 @@ while n < iterations_max and abs(t_current) >= eps:
         print("│_{:9d} │_ {:20.7g}  │_ {:20.7g}  │".format(n, t_current, s_current))
 
     # Error check
-    if math.isnan(s_current):
+    if math.isnan(s_current) or math.isinf(s_current):
         break
 
 print("└───────────┴────────────────────────┴────────────────────────┘")
 
 # Answer output block
-if math.isnan(s_current):
+if math.isnan(s_current) or math.isinf(s_current):
     print("Error. The value of the sum is too big to compare it with given eps.")
-elif n == iterations_max and abs(t_current) >= eps:
+elif n == iterations_max and abs(t_current) > eps:
     print("Number of max iterations is not enough to compute the sum.")
 else:
     print("The sum is {:.7g}, it was computed by {:d} iterations.".format(s_current, n))
