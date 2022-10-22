@@ -17,10 +17,8 @@ while k < 0 or k > n:
 el = int(input("Enter an element to add into a list: "))
 list_n += [0]
 for i in range(n, k - 1, -1):
-    if i == k:
-        list_n[i] = el
-    else:
-        list_n[i] = list_n[i - 1]
+    list_n[i] = list_n[i - 1]
+list_n[k] = el
 
 n += 1
 print("\n[+]Task was successfully completed.\nNew list:")
