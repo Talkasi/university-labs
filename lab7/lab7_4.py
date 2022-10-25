@@ -8,6 +8,7 @@ list_n = [""] * n
 for i in range(n):
     list_n[i] = str(input("Enter element #{:g}: ".format(i + 1)))
 
+# Change all upper english characters to the lower ones in each string
 for i in range(n):
     list_n[i] = lower(list_n[i])
 

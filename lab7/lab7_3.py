@@ -12,6 +12,8 @@ m_string = ""
 for i in range(n):
     digits_counter = 0
     m_digits_current = 0
+
+    # Searching for the longest sequence of digits in the current string
     for j in range(len(list_n[i])):
         if "0" <= list_n[i][j] <= "9":
             digits_counter += 1

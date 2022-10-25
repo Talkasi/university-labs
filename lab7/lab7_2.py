@@ -7,12 +7,14 @@ list_n = [0] * n
 for i in range(n):
     list_n[i] = int(input("Enter element #{:g}: ".format(i + 1)))
 
+# Count negative elements and make list bigger
 c_negative = 0
 for i in range(n):
     if list_n[i] < 0:
         c_negative += 1
         list_n.append(0)
 
+# Step is the number of 2 * a should be inserted
 step = c_negative
 for i in range(n - 1, -1, -1):
     if list_n[i] >= 0:
