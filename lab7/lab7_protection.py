@@ -8,7 +8,8 @@ for i in range(n):
 
 m_string = ""
 for i in range(n):
-    if isalpha(list_n[i][0]) and isdigit(list_n[i][1]) or isalpha(list_n[i][1]) and isdigit(list_n[i][0]):
+    if len(list_n[i]) > 1 and isalpha(list_n[i][0]) and isdigit(list_n[i][1]) or isalpha(list_n[i][1]) \
+            and isdigit(list_n[i][0]):
 
         c, d = 0, 0
         for j in range(len(list_n[i])):
