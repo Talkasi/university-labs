@@ -1,7 +1,3 @@
-'''
-6. Выполнить транспонирование квадратной матрицы.
-В пп. 2, 4, 6 новых матриц не создавать.
-'''
 # Kuracheva K.D., ИУ7-13Б
 n = int(input("Enter number of elements in the list: "))
 list_n = [[0.0] * n for i in range(n)]

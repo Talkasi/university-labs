@@ -1,8 +1,5 @@
 # Kuracheva K.D., ИУ7-13Б
-'''
-4. Переставить местами столбцы с максимальной и минимальной суммой
-элементов.
-'''
+import math
 m, n = map(int, input("Enter number of elements in the list: ").split())
 list_n = [[0.0] * n for i in range(m)]
 
@@ -18,8 +15,8 @@ for i in range(m):
         s += "  {:7.7g}   ".format(j)
     print(s)
 
-min_sum = m * n
-max_sum = -1
+min_sum = math.inf
+max_sum = -math.inf
 needed_min_column_j = -1
 needed_max_column_j = -1
 

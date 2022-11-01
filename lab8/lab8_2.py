@@ -1,8 +1,4 @@
 # Kuracheva K.D., ИУ7-13Б
-'''
-2. Переставить местами строки с наибольшим и наименьшим количеством
-отрицательных элементов.
-'''
 m, n = map(int, input("Enter number of elements in the list: ").split())
 list_n = [[0.0] * n for i in range(m)]
 

@@ -1,9 +1,4 @@
 # Kuracheva K.D., ИУ7-13Б
-'''
-1. Найти строку, имеющую определённое свойство по варианту.
-Варианты к п. 1:
-4. Наименьшее количество чётных элементов.
-'''
 m, n = map(int, input("Enter number of elements in the list: ").split())
 list_n = [[0.0] * n for i in range(m)]
 

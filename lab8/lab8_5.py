@@ -1,8 +1,5 @@
-'''
-5. Найти максимальное значение в квадратной матрице над главной диагональю и
-минимальное - под побочной диагональю.
-'''
 # Kuracheva K.D., ИУ7-13Б
+import math
 n = int(input("Enter number of elements in the list: "))
 list_n = [[0.0] * n for i in range(n)]
 
@@ -18,7 +15,7 @@ for i in range(n):
         s += "  {:7.7g}   ".format(j)
     print(s)
 
-max_el, min_el = 0, 10**20
+max_el, min_el = - math.inf, math.inf
 for i in range(n):
     counter = 0
     for j in range(n):

@@ -1,9 +1,4 @@
 # Kuracheva K.D., ИУ7-13Б
-'''
-3. Найти столбец, имеющий определённое свойство по варианту.
-Варианты к п. 3:
-5. Наибольшее количество чисел, являющихся степенями 2
-'''
 m, n = map(int, input("Enter number of elements in the list: ").split())
 list_n = [[0] * n for i in range(m)]
 
