@@ -9,6 +9,16 @@
 
 print("Enter parameters for matrix D:")
 m, n = map(int, input("Enter number of lines, columns: ").split())
+
+# Checking for input errors
+while m < 1:
+    print("[!]Error. Number of lines should be bigger than 0. Try again.")
+    m = int(input("Enter number of lines: "))
+
+while n < 1:
+    print("[!]Error. Number of columns should be bigger than 0. Try again.")
+    n = int(input("Enter number of columns: "))
+
 d = [[0.0] * n for i in range(m)]
 
 for i in range(m):

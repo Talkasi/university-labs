@@ -56,17 +56,17 @@ for j in range(m):
         c[i][j] = a[i][j] * b[i][j]
 
 print("Matrix C:")
-for j in range(m):
+for j in range(n):
     s = ""
-    for i in range(n):
+    for i in range(m):
         s += " {:10.7g} ".format(c[i][j])
 
     print(s)
 
 v = []
-for i in range(n):
+for j in range(m):
     s = 0
-    for j in range(m):
+    for i in range(n):
         s += c[i][j]
 
     v.append(s)

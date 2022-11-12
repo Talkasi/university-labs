@@ -20,10 +20,9 @@ for i in range(md):
     d[i] = float(input("Enter element #{:g}: ".format(i + 1)))
 
 print("\nList D:")
-s = ""
 for i in range(md):
-    s += " {:15.7g} ".format(d[i])
-print(s)
+    print("#{:g}: {:.7g} ".format(i + 1, d[i]))
+
 
 # Enter parameters for list F
 nf = int(input("\nEnter number of elements in list F: "))
@@ -36,10 +35,8 @@ for i in range(nf):
     f[i] = float(input("Enter element #{:g}: ".format(i + 1)))
 
 print("\nList F:")
-s = ""
 for i in range(nf):
-    s += " {:15.7g} ".format(f[i])
-print(s)
+    print("#{:g}: {:.7g} ".format(i + 1, f[i]))
 
 # New matrix:
 a = [[0.0] * nf for i in range(md)]
@@ -50,8 +47,9 @@ for i in range(md):
     
     for j in range(nf):
         a[i][j] = sin(d[i] + f[j])
-        av[i] += a[i][j] if a[i][j] > 0 else 0
-        count += 1 if a[i][j] > 0 else 0
+        if a[i][j] > 0:
+            av[i] += a[i][j]
+            count += 1
         
     av[i] = av[i] / count if count != 0 else 0
 
