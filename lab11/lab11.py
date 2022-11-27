@@ -1,4 +1,6 @@
 # Kuracheva K. D., ИУ7-13Б
+# Implementation of insertion with barrier
+
 import random
 from time import time
 
@@ -43,7 +45,7 @@ def insertion_with_barrier(given_list, length):
 
 
 def create_list(elements_number, list_type):
-    # list_type:
+    # list_type:0
     #
     # random_list -> 0
     # sorted_list -> 1
