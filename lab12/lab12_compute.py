@@ -1,13 +1,19 @@
 
 
 def compute(list_of_lines):
+    if len(list_of_lines) == 0:
+        print("[!]Error. There is no lines in the list.")
+        return -1
+
     index_start_computing = 0
     computing_flag = 0
     current_number = ''
     result = 0
+    new_line_flag = 0
     for line_number in range(len(list_of_lines)):
         if current_number != '':
             result = computing_flag * float(current_number) if computing_flag != 0 else float(current_number)
+            new_line_flag = 1
             current_number = ''
 
         i = 0
@@ -21,12 +27,13 @@ def compute(list_of_lines):
                 # Collect parts of the number
                 current_number += list_of_lines[line_number][i]
 
-            # If computing type is defining
+            # If computing type is being defined
             elif list_of_lines[line_number][i] == "+" or list_of_lines[line_number][i] == "-":
                 # If we already have the number
                 if current_number != '':
                     result += computing_flag * float(current_number) if computing_flag != 0 else float(current_number)
 
+                index_start_computing = i if new_line_flag == 0 and current_number == '' else index_start_computing
                 current_number = ''
                 computing_flag = 1 if list_of_lines[line_number][i] == "+" else -1
 
@@ -50,9 +57,8 @@ def compute(list_of_lines):
                                                      "{:.5g}".format(result)
                         list_of_lines[line_number] = list_of_lines[line_number][i:]
                         i = 0
-
-                    current_number = ''
-
+                new_line_flag = 0
+                current_number = ''
                 computing_flag = 0
                 result = 0
             i += 1

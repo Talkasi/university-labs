@@ -2,6 +2,10 @@ from lab12_alignment_left import alignment_left
 
 
 def alignment_width(list_of_lines):
+    if len(list_of_lines) == 0:
+        print("[!]Error. There is no lines in the list.")
+        return -1
+
     alignment_left(list_of_lines)
 
     max_line_len = len(max(list_of_lines, key=len))
