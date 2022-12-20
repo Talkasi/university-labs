@@ -1,0 +1,1 @@
+Some float 0.453 with -0.8 1432e1000

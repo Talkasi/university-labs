@@ -1,0 +1,4 @@
+00.89 text
+text
+text
+text 00012.123e2
