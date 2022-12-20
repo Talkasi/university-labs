@@ -12,7 +12,8 @@
 # $2 stores file2
 # $3 stores verbose key
 
-
+# Checks values given to the skript for errors 
+# and through an error to the stderr and 1 exit value if error occured
 error_check(){
 	local valid_command="Valid command is: comparator3.sh file_name1 file_name2 [-v]"
 
@@ -49,52 +50,57 @@ error_check(){
 
 
 numbers_searcher() {
-	old_IFS=$IFS
-	IFS=" "
+	# Create temporary file to write values in
+	file="$(mktemp)"
+	were_numbers=0
 
-	numbers_line=""
+	# Untill loop has < "$1" in the end to make `read` function read from a file,
+	# not from stdin
+	DONE=false
+	until $DONE; do
+		# Done helps to read new line in the end of a file if is any
+		read -r line || DONE=true 
 
-	for word in $(cat "$1"); do
-		number=$(echo "$word" | grep -E '^[+-]?[0-9][0-9]*\.[0-9][0-9]*$')
-		
-		if [ -n "$number" ]; then
-			numbers_line+="$number "
-		fi
-	done
+		for word in $line; do
+			# Check if the word is floating point number or integer
+			# Regular expression ^[+-]?[0-9][0-9]*(\.[0-9][0-9]*)?$
+			# is used for that
+			if [[ "$word" =~ ^[+-]?[0-9][0-9]*(\.[0-9][0-9]*)?$ ]]; then
+				were_numbers=1
+				echo "$word" >> "$file"
+			fi 
+		done
+	done < "$1"
 
-	IFS=$old_IFS
 
-	if [ -z "$numbers_line" ]; then 
+	if [ $were_numbers -eq 0 ]; then 
 		echo "[!]Error. There is no suitable floating point numbers in file '$1'" >&2
 
 		exit 1
 	fi
 }
 
+error_check "$1" "$2" "$3" "$4"
 
-error_check "$1" "$2" "$3"
+file=""
+numbers_searcher "$1"
+file1="$file"
 
-numbers_line=""
+numbers_searcher "$2"
+file2="$file"
 
-numbers_searcher "$1" "$3"
-file1_numbers=$numbers_line
-
-numbers_searcher "$2" "$3"
-file2_numbers=$numbers_line
-
-numbers_in_files_info="Numbers in file1: $file1_numbers\nNumbers in file2: $file2_numbers"
-echo -e "$numbers_in_files_info"
-
-if [ "$file1_numbers" == "$file2_numbers" ]; then
+if cmp -s "$file1" "$file2" ; then
 	if [ "$3" == "-v" ] || [ "$3" == "--verbose" ]; then
 		echo "[+]Corresponding numbers in given files are equal."
 	fi 
+	rm "$file1" "$file2"
 
 	exit 0
 else
 	if [ "$3" == "-v" ] || [ "$3" == "--verbose" ]; then
 		echo "[-]Corresponding numbers in given files are NOT equal."
 	fi
+	rm "$file1" "$file2"
 
 	exit 1
 fi

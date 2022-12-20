@@ -1,0 +1,2 @@
+The number 89 is the first integer with more than one digit that fulfills the property partially introduced
+in the title of this kata. Because this sum gives the same number: 89 = 8.0 + 9.1313 What's the use of saying "Eureka"? 9.0 ^ 2 lalala.
