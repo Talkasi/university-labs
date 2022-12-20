@@ -1,0 +1,7 @@
+Progress
+
+Rank:4 kyu
+Honor:720
+Leaderboard Position:#45,715
+Honor Percentile:Top 9.375%
+Total Completed Kata:91

@@ -44,59 +44,73 @@ error_check(){
 	fi
 }
 
-
-file_cutter() {
-	local search_status=0
-	file_cutted=""
-
-	old_IFS=$IFS
-	IFS=""
-
-	DONE=false
-	until $DONE; do
-		read -r line || DONE=true
-		# printf "'%s'\n" $line
-	    if [ $search_status -eq 0 ]; then
-	        if echo "$line" | grep -Eq "string:"; then
-	            search_status=1
-	            file_cutted="$(echo "$line" | grep -Eo "string:.*")"
-	            #printf "'%s'\n" $file_cutted
-	        fi
-	    else
-	        file_cutted="$file_cutted$line\n"
-	    fi
-	done < "$1"
-
-	IFS=$old_IFS
-	#printf "'%s'\n" "$file_cutted"
-
-	if [ $search_status -eq 0 ]; then
-		echo -e "[!]Error. There is no 'string:' in the file $1\n" >&2
-		exit 1
-	fi
-}
-
 error_check "$1" "$2" "$3" "$4"
 
-file_cutted=""
+old_IFS=$IFS
+IFS=""
 
-file_cutter "$1" "$3"
-file1_cutted="$file_cutted"
+file1="$(mktemp)"
+search_status=0
 
-file_cutter "$2" "$3"
-file2_cutted="$file_cutted"
+DONE=false
+until $DONE; do
+	read -r line || DONE=true
+    if [ $search_status -eq 0 ]; then
+        if [[ "$line" == *"string:"* ]]; then
+            search_status=1
+            new_line="$(echo "$line" | grep -Eo "string:.*")"
+            echo $new_line > "$file1"
+        fi
+    else
+        echo "$line" >> "$file1"
+    fi
+done < "$1"
 
-# printf "'%s'\n'%s'\n" "$file1_cutted" "$file2_cutted"
-if [ "$file1_cutted" == "$file2_cutted" ]; then
+if [ $search_status -eq 0 ]; then
+	rm "$file1"
+	echo -e "[!]Error. There is no 'string:' in the file $1\n" >&2
+	IFS=$old_IFS
+	exit 1
+fi
+
+file2="$(mktemp)"
+search_status=0
+DONE=false
+until $DONE; do
+	read -r line || DONE=true
+    if [ $search_status -eq 0 ]; then
+        if [[ "$line" == *"string:"* ]]; then
+            search_status=1
+            new_line="$(echo "$line" | grep -Eo "string:.*")"
+            echo $new_line > "$file2"
+        fi
+    else
+        echo "$line" >> "$file2"
+    fi
+done < "$2"
+
+if [ $search_status -eq 0 ]; then
+	rm "$file1" "$file2"
+	IFS=$old_IFS
+
+	echo -e "[!]Error. There is no 'string:' in the file $2\n" >&2
+	exit 1
+fi
+
+IFS=$old_IFS
+
+if cmp -s "$file1" "$file2" ; then
 	if [ "$3" == "-v" ] || [ "$3" == "--verbose" ]; then
 		echo '[+]Texts after first "string:" in given files are equal.'
 	fi 
+	rm "$file1" "$file2"
 
 	exit 0
 else
 	if [ "$3" == "-v" ] || [ "$3" == "--verbose" ]; then
 		echo '[-]Texts after first "string:" in given files are NOT equal.'
 	fi
+	rm "$file1" "$file2"
 
 	exit 1
 fi

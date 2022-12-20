@@ -1,0 +1,4 @@
+# An array is defined to be odd-heavy if it contains at least one odd element and every element whose 
+# value is odd is greater than every even-valued element.
+# write a function called isOddHeavy or is_odd_heavy that accepts an integer array and returns true if the array 
+# is odd-heavy else return false. somestring:
