@@ -87,7 +87,7 @@ def delete_positive_numbers(file):
     return 0
 
 
-def file_read(file):
+def file_print(file):
     file.seek(0, 2)
     if file.tell() == 0:
         print("File is empty.")
@@ -115,7 +115,7 @@ def main():
 
     delete_positive_numbers(file)
 
-    file_read(file)
+    file_print(file)
 
     file.close()
 
