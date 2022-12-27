@@ -1,8 +1,3 @@
-# movie header atom
-#
-#
-#
-
 import struct
 
 file = open("a.mp4", "rb")
