@@ -23,7 +23,6 @@ print("\nList D:")
 for i in range(md):
     print("#{:g}: {:.7g} ".format(i + 1, d[i]))
 
-
 # Enter parameters for list F
 nf = int(input("\nEnter number of elements in list F: "))
 while nf < 1:
@@ -44,13 +43,13 @@ av = [0.0] * md
 
 for i in range(md):
     count = 0
-    
+
     for j in range(nf):
         a[i][j] = sin(d[i] + f[j])
         if a[i][j] > 0:
             av[i] += a[i][j]
             count += 1
-        
+
     av[i] = av[i] / count if count != 0 else 0
 
 l = [0.0] * md
@@ -58,7 +57,6 @@ for i in range(md):
     for j in range(nf):
         if a[i][j] < av[i]:
             l[i] += 1
-
 
 print("\n" + "Matrix A ".center(17 * nf) + "AV".center(19) + "L".center(17) + "\n")
 for i in range(md):

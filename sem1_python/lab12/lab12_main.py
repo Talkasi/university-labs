@@ -28,7 +28,6 @@ from lab12_replace_word import replace_word
 from lab12_compute import compute
 from lab12_delete_longest_sentence import delete_longest_sentence
 
-
 given_text = ["Every inch of wall 1 9 space is covered by a bookcase. Each bookcase has -7.67 - 0.67 + 1 shelves, 5.9",
               "-4.9going almost to the ceiling. Some bookshelves are stacked to the brim with hardback books:0-",
               "7science, maths, history, and everything else. Other shelves have two layers",
@@ -36,7 +35,6 @@ given_text = ["Every inch of wall 1 9 space is covered by a bookcase. Each bookc
               "3boxes or lengths of wood, so that you can see the back layer of books above the books in",
               "front. And it still isn't enough. Books are overflowing onto the tables",
               "and the sofas and making little heaps under the win5+5dows."]
-
 
 menu = ["1. Alignment of the text to the left",
         "2. Alignment of the text to the right",

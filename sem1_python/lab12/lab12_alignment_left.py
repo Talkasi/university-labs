@@ -1,4 +1,3 @@
-
 # Aligns text to the left
 def alignment_left(list_of_lines):
     if len(list_of_lines) == 0:

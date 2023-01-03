@@ -1,5 +1,6 @@
 # Kuracheva K.D., ИУ7-13Б
 import math
+
 m, n = map(int, input("Enter number of elements in the list: ").split())
 list_n = [[0.0] * n for i in range(m)]
 

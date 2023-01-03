@@ -12,11 +12,12 @@ while True:
     except:
         print("[!]Error. File can't be opened.")
 
-
 sentences = []
 s = ""
 counter = 0
+
 file.seek(0, 0)
+
 for line in file:
     for c in line.strip():
         s += c
@@ -40,7 +41,3 @@ try:
     file_new.close()
 except:
     print("[!]Error. File can't be created.")
-
-
-
-

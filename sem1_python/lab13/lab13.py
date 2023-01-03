@@ -26,7 +26,7 @@ def data_base_check(file_name):
 
             line_split = line.split(',')
             if len(line_split[0]) > 22 or (len(line_split[2]) != 4 and len(line_split[2]) != 0 or
-                                           not(line_split[2].isdigit()) and len(line_split[2]) == 4) or \
+                                           not (line_split[2].isdigit()) and len(line_split[2]) == 4) or \
                     (len(line_split[1]) > 9 or (len(line_split[1]) < 8 and len(line_split[1]) != 0)) or \
                     len(line_split[3]) > 43:
                 print("[!]Error. File is not a data_base.")
@@ -116,7 +116,7 @@ def add_record_file(file_name):
         license_plate = input("Enter license plate of the car: ")
 
     year = input("Enter year of the manufacture: ")
-    while (len(year) != 4 and len(year) != 0 or (len(year) == 4 and not(year.isdigit()))) or ',' in year:
+    while (len(year) != 4 and len(year) != 0 or (len(year) == 4 and not (year.isdigit()))) or ',' in year:
         print("[!]Error. Length of the year of the manufacture in the record should be 4 if the value is defined or 0 "
               "if this parameter is empty. \nYear must be an integer. \nThere must be no `,` in the record.")
         year = input("Enter year of the manufacture: ")

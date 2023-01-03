@@ -44,7 +44,6 @@ while n < 1:
     print("[!]Error. Number of elements should be bigger then 0. Try again.")
     n = input_errors_checking("Enter number of elements in the list: ", "int")
 
-
 a = [0.0] * n
 
 for i in range(n):
@@ -54,9 +53,7 @@ print("\nEntered list")
 for i in range(n):
     print("Element #{:g}: {:.7g}".format(i + 1, a[i]))
 
-
 sorted_list = quick_sort(a)
-
 
 print("\nSorted list.")
 for i in range(n):

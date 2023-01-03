@@ -20,7 +20,6 @@ for i in range(n):
         max_odd = list_n[i]
         max_odd_i = i
 
-
 if isinf(min_even) or isinf(max_odd):
     print("\nThere is not enough parameters to exchange.")
 else:

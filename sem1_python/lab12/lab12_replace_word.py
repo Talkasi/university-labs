@@ -1,5 +1,3 @@
-
-
 def replace_word(list_of_lines, word_to_replace, word_replacing):
     if len(list_of_lines) == 0:
         print("[!]Error. There is no lines in the list.")

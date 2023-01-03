@@ -1,6 +1,6 @@
 # Kuracheva K.D., ИУ7-13Б
 # Find the longest sequense described in V9
-from math import inf 
+from math import inf
 
 n = int(input("Enter number of elements in the list: "))
 list_n = [0] * n
@@ -22,11 +22,11 @@ for i in range(n):
                 break
         else:
             if (current_len_sequence > 0 and list_n[i - 1] > list_n[i]) or \
-                (current_len_sequence == 0):
+                    (current_len_sequence == 0):
                 current_len_sequence += 1
                 if start_i == -1: start_i = i
                 if current_len_sequence > max_len_sequence:
-                    max_len_sequence = current_len_sequence 
+                    max_len_sequence = current_len_sequence
                     searching_start_i = start_i
 
             elif current_len_sequence > 0 and list_n[i - 1] <= list_n[i]:
@@ -43,7 +43,6 @@ for i in range(n):
     else:
         current_len_sequence = 0
         start_i = -1
-
 
 if max_len_sequence:
     print("\nThe longest sequence is:")

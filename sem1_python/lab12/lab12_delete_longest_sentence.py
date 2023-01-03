@@ -1,4 +1,3 @@
-
 def delete_longest_sentence(list_of_lines):
     index = 0
     max_sentence_len = -1

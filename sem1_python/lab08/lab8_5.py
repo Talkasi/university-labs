@@ -1,5 +1,6 @@
 # Kuracheva K.D., ИУ7-13Б
 import math
+
 n = int(input("Enter number of elements in the list: "))
 list_n = [[0.0] * n for i in range(n)]
 
@@ -24,7 +25,6 @@ for i in range(n):
 
         if n - 1 - i < j:
             min_el = min(min_el, list_n[i][j])
-
 
 print("Max_el is {:.7g}".format(max_el))
 print("Min_el is {:.7g}".format(min_el))

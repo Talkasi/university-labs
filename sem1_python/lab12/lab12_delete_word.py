@@ -1,4 +1,3 @@
-
 def delete_word(list_of_lines, word_to_delete):
     if len(list_of_lines) == 0:
         print("[!]Error. There is no lines in the list.")

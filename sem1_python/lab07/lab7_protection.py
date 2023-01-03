@@ -13,7 +13,8 @@ for i in range(n):
 
         c, d = 0, 0
         for j in range(len(list_n[i])):
-            if not(isalpha(list_n[i][j % 2]) and isalpha(list_n[i][j]) or isdigit(list_n[i][j % 2]) and isdigit(list_n[i][j])):
+            if not (isalpha(list_n[i][j % 2]) and isalpha(list_n[i][j]) or isdigit(list_n[i][j % 2]) and isdigit(
+                    list_n[i][j])):
                 break
         else:
             m_string = list_n[i] if len(list_n[i]) > len(m_string) else m_string

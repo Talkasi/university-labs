@@ -63,7 +63,6 @@ for i in range(n):
     for j in range(m):
         d[i][j] *= max_el
 
-
 print("\nNew matrix D is:")
 for i in range(n):
     s = ""

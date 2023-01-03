@@ -26,7 +26,8 @@ for k in range(z):
     print()
     for j in range(y):
         for i in range(x):
-            matrix[k][i][j] = float(input("Enter element #: z = {:g}, x = {:g}, y = {:g}: ".format(k + 1, i + 1, j + 1)))
+            matrix[k][i][j] = float(
+                input("Enter element #: z = {:g}, x = {:g}, y = {:g}: ".format(k + 1, i + 1, j + 1)))
 
 index = int(input("\nEnter second index to complete the task: "))
 

@@ -1,5 +1,3 @@
-
-
 def compute(list_of_lines):
     if len(list_of_lines) == 0:
         print("[!]Error. There is no lines in the list.")
@@ -49,12 +47,12 @@ def compute(list_of_lines):
                     if index_start_computing < i:
                         list_of_lines[line_number] = \
                             list_of_lines[line_number][:index_start_computing] + "{:.5g}".format(result) + \
-                            list_of_lines[line_number][i - 1 if list_of_lines[line_number][i-1] == ' ' else i:]
+                            list_of_lines[line_number][i - 1 if list_of_lines[line_number][i - 1] == ' ' else i:]
 
                         i -= (i - index_start_computing) - len(str(result))
                     else:
                         list_of_lines[line_number - 1] = list_of_lines[line_number - 1][:index_start_computing] + \
-                                                     "{:.5g}".format(result)
+                                                         "{:.5g}".format(result)
                         list_of_lines[line_number] = list_of_lines[line_number][i:]
                         i = 0
                 new_line_flag = 0

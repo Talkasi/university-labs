@@ -30,4 +30,3 @@ else:
         for j in list_n[i]:
             s += "  {:7.7g}   ".format(j)
         print(s)
-
