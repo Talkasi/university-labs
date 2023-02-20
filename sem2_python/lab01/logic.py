@@ -9,13 +9,9 @@ def equal_form_converter(a, b):
 
     if len(a) == 1:
         a.append("")
-    elif len(a) != 2:
-        return -1
 
     if len(b) == 1:
         b.append("")
-    elif len(b) != 2:
-        return -1
 
     a_len_frac = len(a[1])
     b_len_frac = len(b[1])
@@ -57,8 +53,6 @@ def delete_zeroes(a):
 
 
 def sum_(a, b):
-    # No signs, equal floating point number of digits
-
     if len(a) > len(b):
         max_val = a
         min_val = b
@@ -106,8 +100,6 @@ def sum_(a, b):
 
 
 def sub_(a, b):
-    # No signs, equal floating point number of digits
-
     if len(a) > len(b):
         max_val = a
         min_val = b
@@ -161,7 +153,6 @@ def sub_(a, b):
 
 
 def mul(a, b):
-    # No signs, equal floating point number of digits
     a = str(a)
     b = str(b)
 

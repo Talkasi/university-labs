@@ -5,8 +5,8 @@ from logic import *
 answer_label = 0
 
 
-def input_nuber_field(master):
-    tkinter.Label(master=master, text="Enter first number:", font=('Calibri 18')).grid(column=0, row=0)
+def input_number_field(master, number):
+    tkinter.Label(master=master, text="Enter {} number:".format(number), font=('Calibri 18')).grid(column=0, row=0)
     reg = root.register(input_check)
     field_entry = tkinter.Entry(master=master, validate="key", validatecommand=(reg, "%P"))
     field_entry.grid(column=0, row=1)
@@ -61,9 +61,9 @@ def main_menu():
     body_frame1 = tkinter.Frame(master=body_frame)
 
     number1_frame = tkinter.Frame(master=body_frame1)
-    entry1 = input_nuber_field(number1_frame)
+    entry1 = input_number_field(number1_frame, "first")
     number2_frame = tkinter.Frame(master=body_frame1)
-    entry2 = input_nuber_field(number2_frame)
+    entry2 = input_number_field(number2_frame, "second")
     number1_frame.grid(column=0, row=0, pady=5)
     number2_frame.grid(column=0, row=1, pady=5)
 
@@ -123,15 +123,11 @@ def compute(a, b, char, answer_label):
         second_com = second_arg[0]
         second_arg = second_arg[1:]
 
-    first_arg = delete_zeroes(first_arg)
-    second_arg = delete_zeroes(second_arg)
-
     first_arg, second_arg = equal_form_converter(first_arg, second_arg)
 
     ans = ""
     if char == "*":
         ans = mul(first_arg, second_arg)
-        print(ans, first_arg, second_arg)
         if first_com + second_com in ["+-", "-+"]:
             ans = "-" + ans
     elif first_com + second_com + char in ["+++", "+--"]:
@@ -149,7 +145,6 @@ def compute(a, b, char, answer_label):
         else:
             ans = "-" + sub_(first_arg, second_arg)
 
-    ans = delete_zeroes(ans)
     if ans[-1] == ".":
         ans += "0"
 
