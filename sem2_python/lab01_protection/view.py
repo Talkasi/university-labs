@@ -20,7 +20,6 @@ def to_func(ans, entry):
         number = int(number)
     except:
         print("Fatal error")
-        print("Fatal error")
         exit(1)
     answer = logic.four_ten(number)
     ans.config(text="Answer: " + str(answer))
