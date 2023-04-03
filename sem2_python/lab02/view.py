@@ -33,23 +33,26 @@ def create_input_field(master_field, label_text, input_check):
 
 def n_checker(_type, _sign):
     def checker(text):
+        if len(text) == 0:
+            return True
+
         s_exp = (text[0] in "+-") if _sign else (text[0] == "+")
-        if len(text) == 0 or (text[-1] in "Ee" and sum(text.count(i) for i in "Ee") <= 1) or len(text) == 1 and s_exp:
+        if (text[-1] in "Ee" and sum(text.count(i) for i in "Ee") <= 1) or len(text) == 1 and s_exp:
             return True
 
         if _type == "float":
             try:
                 float(text)
-                warning_label.config(text="", fg="green")
+                warning_label.config(text="")
             except:
-                warning_label.config(text="Warning: wrong input.", fg="red")
+                warning_label.config(text="Warning: wrong input.")
                 return False
         else:
             try:
                 int(text)
-                warning_label.config(text="", fg="green")
+                warning_label.config(text="")
             except:
-                warning_label.config(text="Warning: wrong input.", fg="red")
+                warning_label.config(text="Warning: wrong input.")
                 return False
 
         return True
@@ -61,8 +64,13 @@ def start_computing():
     warning_label.config(text="")
 
     function = entries[0].get()
+
     if len(function) == 0:
         warning_label.config(text="Warning: there is an empty field.")
+        return 0
+
+    if logic.evaluate(1, function) == "Error":
+        warning_label.config(text="Warning: wrong function.")
         return 0
 
     parameters = []
@@ -84,8 +92,23 @@ def start_computing():
         warning_label.config(text="Warning: wrong segment.")
         return 0
 
+    if step <= 0:
+        warning_label.config(text="Warning: wrong step.")
+        return 0
+
+    if eps <= 0 or eps > 1:
+        warning_label.config(text="Warning: wrong eps.")
+        return 0
+
+    if n_max <= 0:
+        warning_label.config(text="Warning: wrong max number of iterations.")
+        return 0
+
     intervals = logic.find_intervals(start, end, step, function)
-    print(intervals)
+    if intervals == "Error":
+        warning_label.config(text="Warning: can't compute function.")
+        return 0
+
     n = 0
     data = []
     for start_i, end_i in intervals:
@@ -115,7 +138,7 @@ def graph(start, end, function):
     y_d1 = np.diff(y_es)
     y_d2 = np.diff(y_d1)
 
-    zeroes = np.abs(y_es) < 1e-3
+    zeros = np.abs(y_es) < 1e-3
     extremes = np.abs(y_d1) < 1e-5
     inflection = np.abs(y_d2) < 1e-8
 
@@ -123,7 +146,7 @@ def graph(start, end, function):
 
     a_f.scatter(x_es[:-1][extremes], y_es[:-1][extremes], color='green', s=40, marker='o', label="extremes")
     a_f.scatter(x_es[:-2][inflection], y_es[:-2][inflection], color='red', s=40, marker='o', label="inflection points")
-    a_f.scatter(x_es[zeroes], y_es[zeroes], color='orange', s=20, marker='o', label="zeros")
+    a_f.scatter(x_es[zeros], y_es[zeros], color='orange', s=20, marker='o', label="zeros")
 
     a_f.legend()
     a_f.grid()
