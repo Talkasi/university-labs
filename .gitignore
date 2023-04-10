@@ -1,1 +1,7 @@
-*__py_cache__
+*__pycache__
+*.png
+*.bmp
+*.jpg
+*.svg
+*.idea
+*.cmake
