@@ -2,8 +2,6 @@ from PIL import Image, ImageTk
 import tkinter
 import logic
 
-# bg_color1 = "#4CAF50"
-# bg_color2 = "white"
 bg_color1 = "gray32"
 bg_color2 = "white"
 
@@ -20,7 +18,7 @@ def create_text(main_f):
     tkinter.Label(master=text_frame, text="Text to encode/Decoded text:", font="Calibri 18", bg=bg_color2,
                   fg=bg_color1).grid(row=0, column=0, pady=15, sticky='W')
 
-    text = tkinter.Text(master=text_frame, bg=bg_color1, width=40)
+    text = tkinter.Text(master=text_frame, bg=bg_color1, fg=bg_color2, width=40)
     text.grid(row=1, column=0)
     text_frame.grid(row=1, column=0, pady=10, padx=30)
 
@@ -92,7 +90,7 @@ img_frame = tkinter.Frame(master=main_frame, bg=bg_color2)
 warning_label = tkinter.Label(master=img_frame, bg=bg_color2, fg=bg_color1, font="Calibri 18", text="Try and enjoy!")
 warning_label.grid(row=2, column=0, pady=2)
 
-img = ImageTk.PhotoImage(Image.open("cat.png").resize((650, 440)))
+img = ImageTk.PhotoImage(Image.open("forest.png").resize((650, 440)))
 label = tkinter.Label(img_frame, bg=bg_color2, image=img)
 get_image_field(img_frame, load_image, warning_label, label, text_field)
 label.grid(row=1, column=0, pady=10)

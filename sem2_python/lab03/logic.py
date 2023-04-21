@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw
 
 
 def encode(img_field, message_field, warning_label):
@@ -16,36 +16,29 @@ def encode(img_field, message_field, warning_label):
     message_bits = string_to_bits(message)
 
     m_i = 0
-    flag_end = 0
-    m_len = len(message_bits)
+    flag_end = False
     for y in range(img_size[1]):
         for x in range(img_size[0]):
-            r, g, b = image.getpixel((x, y))
-            pix = [r, g, b]
-
-            for i in range(3):
-                if m_i < m_len:
-                    if message_bits[m_i] != bin(pix[i])[-1] and bin(pix[i])[-1] == '1':
-                        pix[i] = pix[i] - 1
-                    elif message_bits[m_i] != bin(pix[i])[-1]:
-                        pix[i] = pix[i] + 1
-
-                    m_i += 1
-                else:
-                    flag_end = 1
-                    break
-
-            image.putpixel((x, y), tuple(pix))
-            if flag_end:
+            if m_i >= len(message_bits):
+                flag_end = True
                 break
+
+            r, g, b = image.getpixel((x, y))
+
+            r = (r & ~0x1) | message_bits[m_i]
+            m_i += 1
+            g = (g & ~0x1) | message_bits[m_i]
+            m_i += 1
+            b = (b & ~0x1) | message_bits[m_i]
+            m_i += 1
+
+            image.putpixel((x, y), (r, g, b))
+
         if flag_end:
             break
 
     new_img_path = img_path.split('/')
     new_img_path = '/'.join(new_img_path[:-2] + ['new_' + new_img_path[-1]])
-
-    if new_img_path[-4:] != ".png":
-        new_img_path += ".png"
 
     image.save(new_img_path, "PNG")
 
@@ -55,7 +48,10 @@ def string_to_bits(string):
     for char in string:
         bin_r = bin(ord(char))[2:].zfill(8)
         for bit in bin_r:
-            string_bits.append(bit)
+            string_bits.append(int(bit))
+
+    while len(string_bits) % 3 != 0:
+        string_bits.append(0)
 
     return string_bits
 
@@ -70,27 +66,27 @@ def decode(img_field, message_field, warning_label):
         return
 
     img_size = image.size
-
-    message_bits = ''
+    message_bits = ""
+    message_len = 0
     message = ""
 
-    flag_end = 0
+    flag_end = False
     for y in range(img_size[1]):
         for x in range(img_size[0]):
-            r, g, b = image.getpixel((x, y))
-            pix = [r, g, b]
-
-            for i in range(3):
-                message_bits += bin(pix[i])[-1]
-                if len(message_bits) == 8:
-                    if chr(int(message_bits, 2)) == '\0':
-                        flag_end = 1
-                        break
-                    message += chr(int(message_bits, 2))
-                    message_bits = ''
-
-            if flag_end:
+            if message != "" and message[-1] == '\0':
+                flag_end = True
                 break
+            r, g, b = image.getpixel((x, y))
+
+            for i in [r, g, b]:
+                message_bits += str(i & 0x1)
+                message_len += 1
+
+                if message_len == 8:
+                    message += chr(int(message_bits, 2))
+                    message_len = 0
+                    message_bits = ""
+
         if flag_end:
             break
 
