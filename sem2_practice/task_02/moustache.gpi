@@ -1,0 +1,20 @@
+#!/usr/bin/gnuplot -persist
+
+reset
+NO_ANIMATION = 1
+set terminal svg size 1920, 1080
+set output './graphs/moustache.svg'
+set size ratio 0.5625
+set xlabel "Number of elements in the array"
+set ylabel "Time, s"
+set grid
+set title "Moustache"
+set key left top
+set key font ", 14"
+set bars 4.0
+
+# Data columns: 1 {size} 2 {mean} 3 {median} 4 {minimum} 5 {maximum} 6 {lQuartile} 7 {hQuartile}
+
+plot './data_preproc/index_O2_0.txt' using 1:6:4:5:7 title "Min, quartiles, max" with candlesticks whiskerbars, \
+'./data_preproc/index_O2_0.txt' using 1:3:3:3:3 title "Median" with candlesticks lt -1, \
+'./data_preproc/index_O2_0.txt' using 1:3 title "Index with random numbers -O2" with linespoints

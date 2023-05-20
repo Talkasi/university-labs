@@ -1,0 +1,23 @@
+#!/usr/bin/gnuplot -persist
+
+reset
+NO_ANIMATION = 1
+set terminal svg size 1920, 1080
+set output './graphs/linear_rand.svg'
+set size ratio 0.5625
+set xlabel "Number of elements in the array"
+set ylabel "Time, s"
+set grid
+set title "Linear graph, random numbers"
+set key left top
+set key font ", 14"
+
+# Data columns: 1 {size} 2 {mean} 3 {median} 4 {minimum} 5 {maximum} 6 {lQuartile} 7 {hQuartile}
+
+plot './data_preproc/index_O0_0.txt' using 1:2 with linespoints pt 6 lt rgb "magenta" title "Index with random numbers -O0", \
+'./data_preproc/index_O2_0.txt' using 1:2 with linespoints pt 7 lt rgb "blue" title "Index with random numbers -O2", \
+'./data_preproc/star_O0_0.txt' using 1:2 with linespoints pt 8 lt rgb "green" title "Star with random numbers -O0", \
+'./data_preproc/star_O2_0.txt' using 1:2 with linespoints pt 9 lt rgb "yellow" title "Star with random numbers -O2", \
+'./data_preproc/pointer_O0_0.txt' using 1:2 with linespoints pt 10 lt rgb "red" title "Pointer with random numbers -O0", \
+'./data_preproc/pointer_O2_0.txt' using 1:2 with linespoints pt 11 lt rgb "black" title "Pointer with random numbers -O2"
+
