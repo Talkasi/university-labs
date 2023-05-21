@@ -9,7 +9,7 @@ mkdir data_preproc 2> /dev/null
 mkdir tables_data 2> /dev/null
 
 ./build_apps.sh
-./update_data.sh 10000
+./update_data.sh 2000
 python3 make_preproc.py
 python3 tables_data.py
 ./make_postproc.sh

@@ -49,19 +49,9 @@ void matrix_rand_fill(int matrix[N][N], size_t n) {
             matrix[i][j] = rand();
 }
 
-void print(int a[N][N]) {
-    for (size_t i = 0; i < N; ++i) {
-        for (size_t j = 0; j < N; ++j)
-            printf("%8d ", a[i][j]);
-        printf("\n");
-    }
-    printf("\n");
-}
-
 void transpose(int a[N][N], size_t n) {
-    size_t j = 0;
     for (size_t i = 0; i < n; ++i)
-        for (j = 0; j < i; ++j) {
+        for (size_t j = i + 1; j < n; ++j) {
             int temp = a[i][j];
             a[i][j] = a[j][i];
             a[j][i] = temp;
@@ -69,10 +59,12 @@ void transpose(int a[N][N], size_t n) {
 }
 
 void matrix_mul(int dst[N][N], int a[N][N], int b[N][N], size_t n) {
+    transpose(b, n);
     for (size_t j = 0; j < n; ++j)
         for (size_t i = 0; i < n; ++i) {
             dst[i][j] = 0;
             for (size_t k = 0; k < n; ++k)
                 dst[i][j] += a[i][k] * b[j][k];
         }
+    transpose(b, n);
 }

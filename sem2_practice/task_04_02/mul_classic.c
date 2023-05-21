@@ -49,15 +49,6 @@ void matrix_rand_fill(int matrix[N][N], size_t n) {
             matrix[i][j] = rand();
 }
 
-void print(int a[N][N]) {
-    for (size_t i = 0; i < N; ++i) {
-        for (size_t j = 0; j < N; ++j)
-            printf("%8d ", a[i][j]);
-        printf("\n");
-    }
-    printf("\n");
-}
-
 void matrix_mul(int dst[N][N], int a[N][N], int b[N][N], size_t n) {
     for (size_t j = 0; j < n; ++j)
         for (size_t i = 0; i < n; ++i) {
