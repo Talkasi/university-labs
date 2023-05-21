@@ -1,0 +1,23 @@
+#!/usr/bin/gnuplot -persist
+
+reset
+NO_ANIMATION = 1
+set terminal svg size 1920, 1080
+set output './graphs/all_linear.svg'
+set size ratio 0.5625
+set xlabel "Number of elements in the array"
+set ylabel "Time, s"
+set grid
+set title "Linear graph, random numbers"
+set key left top
+set key font ", 14"
+
+# Data columns: 1 {size} 2 {mean} 3 {median} 4 {minimum} 5 {maximum} 6 {lQuartile} 7 {hQuartile}
+
+plot './data_preproc/mul_classic_O0.txt' using 1:2 with linespoints pt 6 lt rgb "magenta" title "Without transpose -O0", \
+'./data_preproc/mul_transpose_O0.txt' using 1:2 with linespoints pt 7 lt rgb "cyan" title "With transpose -O0", \
+'./data_preproc/mul_classic_Os.txt' using 1:2 with linespoints pt 8 lt rgb "green" title "Without transpose -Os", \
+'./data_preproc/mul_transpose_Os.txt' using 1:2 with linespoints pt 9 lt rgb "yellow" title "With transpose -Os", \
+'./data_preproc/mul_classic_O3.txt' using 1:2 with linespoints pt 10 lt rgb "red" title "Without transpose -O3", \
+'./data_preproc/mul_transpose_O3.txt' using 1:2 with linespoints pt 11 lt rgb "blue" title "With transpose -O3"
+
