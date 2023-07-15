@@ -60,8 +60,8 @@ void transpose(int a[N][N], size_t n) {
 
 void matrix_mul(int dst[N][N], int a[N][N], int b[N][N], size_t n) {
     transpose(b, n);
-    for (size_t j = 0; j < n; ++j)
-        for (size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i)
+        for (size_t j = 0; j < n; ++j) {
             dst[i][j] = 0;
             for (size_t k = 0; k < n; ++k)
                 dst[i][j] += a[i][k] * b[j][k];

@@ -5,12 +5,11 @@ files = cfg.readline().split()
 opts = cfg.readline().split()
 sizes = cfg.readline().split()
 n_digits = int(cfg.readline().split()[0])
-c = 0
+cfg.close()
 for file in files:
         for opt in opts:
             graph_data = open(f'./data_preproc/{file}_{opt}.txt', 'w')
             for size in sizes:
-                c += 1
                 corrected_size = "0"*(n_digits - len(size)) + size
                 data = open(f'./data/{file}_{opt}_{corrected_size}.txt')
                 arr = np.array([float(i) for i in data.readlines()])
