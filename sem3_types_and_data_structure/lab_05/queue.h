@@ -23,8 +23,8 @@ typedef enum {
 #define NC "\033[0m"
 
 #define EPS 10e-6
-#define MAX_QUEUE_SIZE 5
-#define MAX_N_REQUESTS 10
+#define MAX_QUEUE_SIZE 100
+#define MAX_N_REQUESTS 1000
 #define ACCURACY 10000
 
 typedef struct node node_t;
@@ -34,9 +34,6 @@ typedef struct request request_t;
 typedef int (*push)(queue_t *, request_t r);
 typedef int (*pop)(queue_t *, request_t *r);
 typedef size_t (*get_n_requests)(queue_t *);
-	// int (*push)(queue_t *, request_t r);
-	// int (*pop)(queue_t *, request_t *r);
-	// size_t (*get_n_requests)(queue_t *);
 
 struct request {
 	char val;
@@ -79,9 +76,7 @@ typedef struct {
 	double time_max;
 
 	double time_left;
-	double free_time;
 	double work_time;
-	double prev_work_time;
 	double request_time_sum;
 
 	request_t r;

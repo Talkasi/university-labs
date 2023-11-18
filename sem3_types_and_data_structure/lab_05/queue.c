@@ -6,7 +6,6 @@
 
 void print_header()
 {
-	//printf(YELLOW);
 	printf("┌─────────────┬─────────────────────────────────┬─────────────────────────────────┐\n"
 	       "│ Number of   │            First queue          │          Second queue           │\n"
 	       "│ requests    ├────────────────┬────────────────┼────────────────┬────────────────┤\n"
@@ -14,33 +13,30 @@ void print_header()
 	       "├─────────────┼────────────────┼────────────────┼────────────────┼────────────────┤\n");
 }
 
-void print_short_info(size_t q1_n_requests, size_t q2_n_requests, machine_t *a1, machine_t *a2)
+void print_short_info(size_t q1_n_requests, size_t q2_n_requests, machine_t *a1, machine_t *a2, double total_work_time)
 {
 	printf("│ %11zu │ %14zu │ %14lf │ %14zu │ %14lf │\n", a2->n_processed, 
-		   q1_n_requests, (double) a1->length_sum / a1->work_time, 
-		   q2_n_requests, (double) a2->length_sum / a1->work_time);
+		   q1_n_requests, (double) a1->length_sum / total_work_time,
+		   q2_n_requests, (double) a2->length_sum / total_work_time);
 }
 
 void print_footer()
 {
 	printf("└─────────────┴────────────────┴────────────────┴────────────────┴────────────────┘\n");
-	//printf(NC);
 }
 
 
-void print_all_info(machine_t *a1, machine_t *a2)
+void print_all_info(machine_t *a1, machine_t *a2, double total_work_time)
 {
-	//printf(YELLOW);
 	printf(">>  RESULT:\n");
-	printf("│ %-60s %12lf\n", "Work time:", a1->work_time);
-	printf("│ %-60s %12lf %12lf\n", "Free time of the second machine:", a2->free_time, a1->work_time - a2->work_time);
+	printf("│ %-60s %12lf\n", "Work time:", total_work_time);
+	printf("│ %-60s %12lf\n", "Free time of the second machine:", total_work_time - a2->work_time);
 	printf("│ %-60s %12zu\n", "Number of requests processed by the first machine:",
 	    a1->n_processed);
 	printf("│ %-60s %12lf\n", "Average time for the requests to stay in the first queue:",
 	    a1->request_time_sum / a1->n_processed);
 	printf("│ %-60s %12lf\n│ \n", "Average time for the requests to stay in the second queue:",
 	    a2->request_time_sum / a2->n_processed);
-	//printf(NC);
 }
 
 // NOTE(talkasi): Array part 
@@ -116,7 +112,6 @@ int pop_list(queue_t *q, request_t *r)
 		node_t *tmp = Q->head;
 		Q->head = Q->head->next;
 
-		// TODO(Talkasi): Check this with valgrind!
 		free(tmp);
 		return 0;
 	}
@@ -129,6 +124,7 @@ size_t list_get_n_requests(queue_t *q)
 	list_queue_t *Q = (list_queue_t *)q;
 	return Q->n_requests;
 }
+
 
 int fill_list_queue(list_queue_t *q) {
 	int rc;
@@ -151,6 +147,7 @@ void free_list_queue(list_queue_t *q) {
 	}
 }
 
+
 double	get_time(double t_min, double t_max)
 {
 	// NOTE(talkasi): srand should be called before somewhere else.
@@ -164,10 +161,8 @@ int	push_law(double possibility)
 	return rand() % ACCURACY < possibility * ACCURACY;
 }
 
-
 void push_by_law(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double possibility)
 {
-	a1->r.entered_time = a1->work_time;
 	if (push_law(possibility))
 		assert(q1->Push(q1, a1->r) >= 0);
 	else
@@ -175,7 +170,9 @@ void push_by_law(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double 
 }
 
 
-void update_stat(size_t n_requests_q1, size_t n_requests_q2, machine_t *a1, machine_t *a2, stat_flag f) {
+void update_stat(size_t n_requests_q1, size_t n_requests_q2, 
+				 machine_t *a1, machine_t *a2, 
+				 double *total_work_time, stat_flag f) {
 	double time_left;
 
 	switch (f) {
@@ -208,23 +205,33 @@ void update_stat(size_t n_requests_q1, size_t n_requests_q2, machine_t *a1, mach
 
 	a1->work_time += time_left;
 	a2->work_time += time_left;
+
+	*total_work_time += time_left;
 }
 
 
-void handle_simultaneous(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double possibility)
+void handle_simultaneous(queue_t *q1, queue_t *q2, 
+						 machine_t *a1, machine_t *a2, 
+						 double *total_work_time, double possibility)
 {
 	if (fabs(a1->time_left - a2->time_left) < EPS) {
-		a2->r.entered_time = a1->work_time;
+		a2->r.entered_time = *total_work_time;
 		assert(q1->Push(q1, a2->r) >= 0);
+
+		a1->r.entered_time = *total_work_time;
 		push_by_law(q1, q2, a1, a2, possibility);
-		update_stat(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, BOTH_A);
+
+		update_stat(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, total_work_time, BOTH_A);
 	} else if (a1->time_left > a2->time_left) {
-		a2->r.entered_time = a1->work_time;
+		a2->r.entered_time = *total_work_time;
 		assert(q1->Push(q1, a2->r) >= 0);
-		update_stat(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, SECOND_A);
+
+		update_stat(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, total_work_time, SECOND_A);
 	} else {
+		a1->r.entered_time = *total_work_time;
 		push_by_law(q1, q2, a1, a2, possibility);
-		update_stat(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, FIRST_A);
+
+		update_stat(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, total_work_time, FIRST_A);
 	}
 }
 
@@ -234,18 +241,67 @@ void	process(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double poss
 	srand48(time(NULL));
 	srand(time(NULL));
 
+	double total_work_time = 0;
+
 	size_t prev = 0;
 	while (a2->n_processed < MAX_N_REQUESTS) {
-		assert(q1->Get_n_requests(q1) > 0);
+		/* NOTE(Talkasi): The first queue is empty. No machine is working. */
+		if (q1->Get_n_requests(q1) == 0 && a1->time_left < EPS && a2->time_left < EPS) {
+			assert(q2->Pop(q2, &a2->r) >= 0);
+			a2->request_time_sum += total_work_time - a2->r.entered_time;
+
+			a2->time_left = get_time(a2->time_min, a2->time_max);
+			total_work_time += a2->time_left;
+			a2->work_time += a2->time_left;
+
+			a2->length_sum += q2->Get_n_requests(q2) * a2->time_left;
+
+			a2->r.entered_time = total_work_time;
+			assert(q1->Push(q1, a2->r) >= 0);
+
+			++a2->n_processed;
+			a2->time_left = 0;
+		}
+
+		/* NOTE(Talkasi): The first queue is empty. The second machine is working, 
+		 * the first doesn't. 
+		 */
+		else if (q1->Get_n_requests(q1) == 0 && a1->time_left < EPS && a2->time_left >= EPS) {
+			total_work_time += a2->time_left;
+			a2->work_time += a2->time_left;
+			a2->length_sum += q2->Get_n_requests(q2) * a2->time_left;
+
+			a2->r.entered_time = total_work_time;
+			assert(q1->Push(q1, a2->r) >= 0);
+
+			++a2->n_processed;
+			a2->time_left = 0;
+		}
+
+		/* NOTE(Talkasi): The first queue is empty, the second is not. 
+		 * The first machine is working, the second doesn't. 
+		 */
+		else if (q1->Get_n_requests(q1) == 0 && a1->time_left >= EPS && a2->time_left < EPS) {
+			assert(q2->Pop(q2, &a2->r) >= 0);
+			a2->request_time_sum += total_work_time - a2->r.entered_time;
+
+			a2->time_left = get_time(a2->time_min, a2->time_max);
+
+			handle_simultaneous(q1, q2, a1, a2, &total_work_time, possibility);
+		}
 
 		/* NOTE(Talkasi): The second queue is empty, no machine is working. */
-		if (q2->Get_n_requests(q2) == 0 && a1->time_left < EPS && a2->time_left < EPS) {
+		else if (q2->Get_n_requests(q2) == 0 && a1->time_left < EPS && a2->time_left < EPS) {
 			assert(q1->Pop(q1, &a1->r) >= 0);
-			a1->request_time_sum += a1->work_time - a1->r.entered_time;
+			a1->request_time_sum += total_work_time - a1->r.entered_time;
 
 			a1->time_left = get_time(a1->time_min, a1->time_max);
+			total_work_time += a1->time_left;
 			a1->work_time += a1->time_left;
+
 			a1->length_sum += q1->Get_n_requests(q1) * a1->time_left;
+
+			a1->r.entered_time = total_work_time;
 			push_by_law(q1, q2, a1, a2, possibility);
 
 			++a1->n_processed;
@@ -253,41 +309,42 @@ void	process(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double poss
 		}
 
 		/* NOTE(Talksi): Both queues are not empty, no machine is working. */
-		else if (q2->Get_n_requests(q2) != 0 && a1->time_left < EPS && a2->time_left < EPS) {
+		else if (q1->Get_n_requests(q1) != 0 && q2->Get_n_requests(q2) != 0 &&
+				 a1->time_left < EPS && a2->time_left < EPS) {
 			assert(q1->Pop(q1, &a1->r) >= 0);
-			a1->request_time_sum += a1->work_time - a1->r.entered_time;
+			a1->request_time_sum += total_work_time - a1->r.entered_time;
 			a1->time_left = get_time(a1->time_min, a1->time_max);
-
-			a2->free_time += a1->work_time - a2->prev_work_time;
 
 			assert(q2->Pop(q2, &a2->r) >= 0);
-			a2->request_time_sum += a1->work_time - a2->r.entered_time;
+			a2->request_time_sum += total_work_time - a2->r.entered_time;
 			a2->time_left = get_time(a2->time_min, a2->time_max);
-			a2->prev_work_time = a1->work_time + a2->time_left;
 
-			handle_simultaneous(q1, q2, a1, a2, possibility);
+			handle_simultaneous(q1, q2, a1, a2, &total_work_time, possibility);
 		}
 
-		/* NOTE(Talkasi): The first machine is not working, the second does. */
-		else if (a2->time_left >= EPS && a1->time_left < EPS) {
+		/* NOTE(Talkasi): The first machine is not working, the second does. 
+		 * The first queue is not empty.
+		 */
+		else if (q1->Get_n_requests(q1) != 0 && a2->time_left >= EPS && a1->time_left < EPS) {
 			assert(q1->Pop(q1, &a1->r) >= 0);
-			a1->request_time_sum += a1->work_time - a2->r.entered_time;
-
+			a1->request_time_sum += total_work_time - a2->r.entered_time;
 			a1->time_left = get_time(a1->time_min, a1->time_max);
 
-			handle_simultaneous(q1, q2, a1, a2, possibility);
+			handle_simultaneous(q1, q2, a1, a2, &total_work_time, possibility);
 		}
 
 		/* NOTE(Talkasi): The first machine is working, the second doesn't.
 		 * The second queue is empty.
 		 */
-		else if (a1->time_left > EPS && a2->time_left < EPS && q2->Get_n_requests(q2) == 0) {
+		else if (a1->time_left >= EPS && a2->time_left < EPS && q2->Get_n_requests(q2) == 0) {
+			a1->r.entered_time = total_work_time;
 			push_by_law(q1, q2, a1, a2, possibility);
 
 			++a1->n_processed;
 			a1->length_sum += q1->Get_n_requests(q1) * a1->time_left;
 			a2->length_sum += q2->Get_n_requests(q2) * a1->time_left;
 
+			total_work_time += a1->time_left;
 			a1->work_time += a1->time_left;
 			a1->time_left = 0;
 		}
@@ -295,15 +352,14 @@ void	process(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double poss
 		/* NOTE(Talkasi): The first machine is working, the second doesn't.
 		 * The second queue is not empty.
 		 */
-		else if (a1->time_left > EPS && a2->time_left < EPS && q2->Get_n_requests(q1) != 0) {
-			a2->free_time += a1->work_time - a2->prev_work_time;
+		else if (a1->time_left >= EPS && a2->time_left < EPS && 
+				 q1->Get_n_requests(q1) != 0 && q2->Get_n_requests(q2) != 0) {
 
-			assert(q2->Pop(q2, &a1->r) >= 0);
-			a2->request_time_sum += a1->work_time - a2->r.entered_time;
+			assert(q2->Pop(q2, &a2->r) >= 0);
+			a2->request_time_sum += total_work_time - a2->r.entered_time;
 			a2->time_left = get_time(a2->time_min, a2->time_max);
-			a2->prev_work_time = a1->work_time + a2->time_left;
 
-			handle_simultaneous(q1, q2, a1, a2, possibility);
+			handle_simultaneous(q1, q2, a1, a2, &total_work_time, possibility);
 		}
 
 		if (prev != a2->n_processed && a2->n_processed % MAX_QUEUE_SIZE == 0) {
@@ -311,10 +367,10 @@ void	process(queue_t *q1, queue_t *q2, machine_t *a1, machine_t *a2, double poss
 				print_header();
 
 			prev = a2->n_processed;
-			print_short_info(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2);
+			print_short_info(q1->Get_n_requests(q1), q2->Get_n_requests(q2), a1, a2, total_work_time);
 		}
 	}
 
 	print_footer();
-	print_all_info(a1, a2);
+	print_all_info(a1, a2, total_work_time);
 }

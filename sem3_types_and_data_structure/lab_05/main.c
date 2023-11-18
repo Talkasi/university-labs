@@ -77,20 +77,22 @@ int	main(void)
 				printf(RED "Wrong time border." NC " Try again: ");
 			
 			printf("Enter maximum time border of the first queue (double): ");
-			while (read_double(&settings.time1_max) || settings.time1_max < 0)
+			while (read_double(&settings.time1_max) || settings.time1_max < 0 ||
+				   settings.time1_max < settings.time1_min)
 				printf(RED "Wrong time border." NC " Try again: ");
 			break;
 		case CHANGE_QUEUE2_TIME:
-			printf("Enter minimum time border of the secind queue (double): ");
+			printf("Enter minimum time border of the second queue (double): ");
 			while (read_double(&settings.time2_min) || settings.time2_min < 0)
 				printf(RED "Wrong time border." NC " Try again: ");
 			
-			printf("Enter maximum time border of the secind queue (double): ");
-			while (read_double(&settings.time2_max) || settings.time2_max < 0)
+			printf("Enter maximum time border of the second queue (double): ");
+			while (read_double(&settings.time2_max) || settings.time2_max < 0 ||
+				   settings.time2_max < settings.time2_min)
 				printf(RED "Wrong time border." NC " Try again: ");
 			break;
 		case CHANGE_POSSIBILITY:
-			printf("Enter possibility for the request to enter the secind queue in [0, 1]: ");
+			printf("Enter possibility for the request to stay in the first queue in [0, 1]: ");
 			while (read_double(&settings.possibility) || settings.possibility < 0 ||
 				   settings.possibility > 1)
 				printf(RED "Wrong possibility." NC " It must be number from 0 to 1. Try again: ");
@@ -123,6 +125,9 @@ void pre_init_all(array_queue_t *array_q1, array_queue_t *array_q2,
 
 	memset(a1, 0, sizeof(*a1));
 	memset(a2, 0, sizeof(*a2));
+
+	memset(array_q1, 0, sizeof(*array_q1));
+	memset(array_q2, 0, sizeof(*array_q2));
 
 	memset(list_q1, 0, sizeof(*list_q1));
 	memset(list_q2, 0, sizeof(*list_q2));
