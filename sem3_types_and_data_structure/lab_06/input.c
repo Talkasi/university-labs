@@ -66,11 +66,18 @@ int	read_long(long *number)
 	return 0;
 }
 
-void read_char(char *c)
+int read_char(char *c)
 {
-	*c = getchar();
-	while (getchar() != '\n')
-		;
+	int rc;
+	char	tmp[MAX_STR_LEN];
+	if ((rc = read_str(stdin, tmp, MAX_STR_LEN)) == 0)
+		return rc;
+
+	if (tmp[1] != '\0')
+		return -1;
+
+	*c = tmp[0];
+	return 0;
 }
 
 int	read_str(FILE *f, char *s, int max_len)

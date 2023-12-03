@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 size_t fread_line(FILE *f, char *s, size_t max_len)
 {
@@ -32,11 +33,12 @@ int alloc_node(node_t **node) {
 	return 0;
 }
 
-void free_tree(node_t *node) {
-    if (node != NULL) {
-        free_tree(node->right);
-        free_tree(node->left);
-        free(node);
+void free_tree(node_t **node) {
+    if (*node != NULL) {
+        free_tree(&(*node)->right);
+        free_tree(&(*node)->left);
+        free(*node);
+        *node = NULL;
     }
 }
 
@@ -45,7 +47,7 @@ int create_node(node_t **node, char *s) {
 	if ((rc = alloc_node(node)))
 		return rc;
 
-	(*node)->data = s;
+	strcpy((*node)->data, s);
 	return 0;
 }
 
@@ -95,7 +97,7 @@ int open_tree_img(char *file_name, node_t *root)
     fclose(out_img);
 
     char command[MAX_STR_LEN * 2];
-    sprintf(command, "dot -Tpng %s -o ./img/%s.png && sxiv ./img/%s.png", path, file_name, file_name);
+    sprintf(command, "dot -Tpng %s -o ./img/%s.png && sxiv ./img/%s.png &", path, file_name, file_name);
     system(command);
     return 0;
 }
@@ -112,18 +114,19 @@ node_t *put_data(node_t *root, node_t *new_node) {
     return root;
 }
 
-int create_tree_from_file(FILE *f, node_t **root, char words[MAX_N_WORDS][MAX_WORD_LEN], size_t *n) {
+int create_tree_from_file(FILE *f, node_t **root) {
+	free_tree(root);
 	int rc;
 
 	node_t *new_node;
 	size_t i = 0;
-	while (fread_line(f, words[i], MAX_STR_LEN)) {
-		if ((rc = create_node(&new_node, words[i])))
+    char word[MAX_STR_LEN];
+	while (fread_line(f, word, MAX_WORD_LEN)) {
+		if ((rc = create_node(&new_node, word)))
 			return rc;
 		*root = put_data(*root, new_node);
 		++i;
 	}
-	*n = i;
 
 	return 0;
 }
@@ -152,11 +155,10 @@ void copyFile(const char* sourceFileName, const char* destinationFileName) {
     fclose(destinationFile);
 }
 
-int delete_by_first_letter_file(FILE *file, char c) {
-	char *fileName = "new";
-    char word[100];
+int delete_by_first_letter_file(char *fileName, char c) {
+	char word[100];
 
-    file = fopen(fileName, "r+");
+    FILE *file = fopen(fileName, "r+");
     if (file == NULL)
         return FILE_ERR;
 
@@ -171,6 +173,7 @@ int delete_by_first_letter_file(FILE *file, char c) {
         }
     }
 
+    ftruncate(fileno(file), wp);
     return 0;
 }
 
@@ -206,7 +209,7 @@ node_t *delete_by_first_letter_tree(node_t *root, char c)
         else
             successor_parent->right = successor->right;
  
-        root->data = successor->data;
+        strcpy(root->data, successor->data);
         free(successor);
 
         // root->left = delete_by_first_letter(root->left, c);
@@ -249,7 +252,7 @@ node_t *delete_data(node_t *root, char *key)
         else
             successor_parent->right = successor->right;
  
-        root->data = successor->data;
+        strcpy(root->data, successor->data);
         free(successor);
         return root;
     }
