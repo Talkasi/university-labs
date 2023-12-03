@@ -1,4 +1,3 @@
-# Kuracheva Ksenia, ИУ7-13Б
 import math
 
 print('\tInput area <-> Data\n')
