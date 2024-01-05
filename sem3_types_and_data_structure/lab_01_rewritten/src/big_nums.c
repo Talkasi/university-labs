@@ -1,6 +1,7 @@
 #include "big_nums.h"
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 
 int get_digit(bdouble_t *d, int digit_pos)
 {
@@ -12,6 +13,7 @@ int get_digit(bdouble_t *d, int digit_pos)
 // NOTE(Talkasi): Puts digit on the position, doesn't shift other bits.
 void put_digit(bdouble_t *d, int digit_pos, int digit)
 {
+	assert(digit >=0 && digit <= 9);
 	int i = digit_pos / DIGITS_PER_LONG;
 	int shift = BITS_IN_LONG - ((digit_pos + 1) % DIGITS_PER_LONG) * BITS_PER_DIGIT;
 
@@ -50,18 +52,24 @@ int scanf_bdouble(bdouble_t *d)
 				return SCANF_ERR;
 		} else
 			return SCANF_ERR;
-	} while ((c = getchar()) != '\n' && c != EOF);
+	} while ((c = getchar()) != '\n' && c != EOF && c != ' ');
 
 	return 0;
 }
 
 void printf_bdouble(bdouble_t *d)
 {
-	printf("%d.", get_digit(d, 0));
-	for (int i = 1; i < DIGITS_PER_LONG * N_LONGS_IN_MANTISSA; ++i)
-		printf("%d", get_digit(d, i));
+	// NOTE(Talkasi): This code will be used later
+	// printf("%d.", get_digit(d, 0));
+	// for (int i = 1; i < N_SIGNIFICANTS; ++i)
+	// 	printf("%d", get_digit(d, i));
 
-	printf("e%c%02d\n", d->sign >= 0 ? '+' : '-', d->exponent);
+	// printf("e%c%02d length: %d\n", d->sign >= 0 ? '+' : '-', d->exponent, d->d_in_mantissa);
+	// printf("\n");
+
+	for (int i = 0; i < N_SIGNIFICANTS; ++i)
+		printf("%d", get_digit(d, i));
+	printf("\n");
 }
 
 int cmp_bdoubles(bdouble_t *d1, bdouble_t *d2)
@@ -81,7 +89,7 @@ int cmp_bdoubles(bdouble_t *d1, bdouble_t *d2)
 
 void init_by_zeroes(bdouble_t *d, int i_from)
 {
-	for (int i = i_from; i < DIGITS_PER_LONG * N_LONGS_IN_MANTISSA; ++i)
+	for (int i = i_from; i < N_SIGNIFICANTS; ++i)
 		put_digit(d, i, 0);
 }
 
@@ -90,8 +98,8 @@ void init_bdouble(bdouble_t *dst, bdouble_t *src, int i_from, int i_to)
 	for (int i = i_from; i < i_to; ++i)
 		put_digit(dst, i - i_from, get_digit(src, i));
 
-	init_by_zeroes(dst, i_from);
-	dst->d_in_mantissa = i_to - i_from - 1;
+	init_by_zeroes(dst, i_to);
+	dst->d_in_mantissa = i_to - i_from;
 }
 
 int delete_prev_zeroes(bdouble_t *d)
@@ -118,24 +126,61 @@ int sub_bdoubles(bdouble_t *d1, bdouble_t *d2)
 		put_digit(d1, i, new_digit);
 	}
 
-	return delete_prev_zeroes(d1);
+	int rc = delete_prev_zeroes(d1);
+	
+	int n_past_zeroes = 0;
+	for (int i = d1->d_in_mantissa - 1; i >= 0; --i)
+		++n_past_zeroes;
+
+	d1->d_in_mantissa -= n_past_zeroes;
+
+	return rc;
 }
 
 int mul_bdouble(bdouble_t *res, bdouble_t *d, int num)
 {
+	assert(d->d_in_mantissa <= N_SIGNIFICANTS);
 	memset(res, 0, sizeof(*res));
+	if (num == 0)
+		return 0;
 
 	int carry = 0;
-	for (int i = d->d_in_mantissa; i > 0; --i) {
-		int new_digit = get_digit(d, i - 1) * num + carry;
+	int new_digit;
+	res->d_in_mantissa = d->d_in_mantissa;
+	for (int i = d->d_in_mantissa - 1; i >= 0; --i) {
+		new_digit = get_digit(d, i) * num + carry;
 		carry = new_digit / 10;
-		put_digit(res, i, new_digit);
+		put_digit(res, i, new_digit % 10);
 	}
 
-	put_digit(res, 0, carry);
-	return delete_prev_zeroes(res);
+	if (carry != 0) {
+		if (res->d_in_mantissa < N_SIGNIFICANTS) {
+			for (int i = res->d_in_mantissa; i > 0; --i)
+				put_digit(res, i, get_digit(res, i - 1));
+
+			put_digit(res, 0, carry);
+			++res->d_in_mantissa;
+		} else {
+			int round = get_digit(res, res->d_in_mantissa - 1) >= 5 ? 1 : 0;
+			for (int i = res->d_in_mantissa - 1; i > 0; --i) {
+				new_digit = get_digit(res, i - 1) + round;
+				if (new_digit > 9) {
+					round = 1;
+					new_digit %= 10;
+				} else
+					round = 0;
+
+				put_digit(res, i, new_digit);
+			}
+
+			put_digit(res, 0, carry + round);
+		}
+	}
+
+	return 0;
 }
 
+// TODO(Talkasi): round numbers;
 int div_bdoubles(bdouble_t *res, bdouble_t *d1, bdouble_t *d2)
 {
 	memset(res, 0, sizeof(*res));
@@ -145,12 +190,18 @@ int div_bdoubles(bdouble_t *res, bdouble_t *d1, bdouble_t *d2)
 	bdouble_t part_div = {};
 	init_bdouble(&part_div, d1, 0, d2->d_in_mantissa);
 
+	printf("Part div: \n");
+	printf_bdouble(&part_div);
+
 	int next_d1_digit_i = d2->d_in_mantissa;
 	bdouble_t tmp_mul_res = {};
 	int new_digit;
 	do {
 		while (part_div.d_in_mantissa < d2->d_in_mantissa) {
 			if (next_d1_digit_i >= d1->d_in_mantissa && (part_div.d_in_mantissa == 0))
+				return 0;
+
+			if (next_d1_digit_i >= N_SIGNIFICANTS)
 				return 0;
 
 			new_digit = (next_d1_digit_i < d1->d_in_mantissa) ? get_digit(d1, next_d1_digit_i++) : 0;
@@ -166,13 +217,36 @@ int div_bdoubles(bdouble_t *res, bdouble_t *d1, bdouble_t *d2)
 		}
 
 		int simple_multiplier = simple_dividend / simple_divisor;
+		printf("d2:");
+		printf_bdouble(d2);
+		printf("part_div:");
+		printf_bdouble(&part_div);
+		printf("Multipliers: %d = %d / %d\n", simple_multiplier, simple_dividend, simple_divisor);
+
 		mul_bdouble(&tmp_mul_res, &part_div, simple_multiplier);
-		while (cmp_bdoubles(&tmp_mul_res, d2) > 0)
+
+		printf("Result multiplier: %d\n", simple_multiplier);
+		printf("Mul number: ");
+		printf_bdouble(&part_div);
+		printf("Result: ");
+		printf_bdouble(&tmp_mul_res);
+
+		while (cmp_bdoubles(&tmp_mul_res, d2) < 0) {
 			mul_bdouble(&tmp_mul_res, &part_div, --simple_multiplier);
+
+			printf("Result multiplier: %d\n", simple_multiplier);
+			printf("Mul number: ");
+			printf_bdouble(&part_div);
+			printf("Result: ");
+			printf_bdouble(&tmp_mul_res);
+		}
 
 		put_digit(res, res->d_in_mantissa++, simple_multiplier);
 		sub_bdoubles(&part_div, &tmp_mul_res);
-	} while (next_d1_digit_i < d1->d_in_mantissa || !(part_div.d_in_mantissa == 0));
+		printf("Sub\n");
+		printf_bdouble(&part_div);
+		printf("\n");
+	} while ((next_d1_digit_i < d1->d_in_mantissa || !(part_div.d_in_mantissa == 0)) && next_d1_digit_i < N_SIGNIFICANTS);
 
 	return 0;
 }

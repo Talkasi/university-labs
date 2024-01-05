@@ -21,6 +21,7 @@ typedef struct bdouble {
 int scanf_bdouble(bdouble_t *d);
 void printf_bdouble(bdouble_t *d);
 
+int mul_bdouble(bdouble_t *res, bdouble_t *d, int num);
 int div_bdoubles(bdouble_t *res, bdouble_t *d1, bdouble_t *d2);
 
 #endif
