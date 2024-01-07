@@ -1,5 +1,5 @@
 CC:=gcc
-C_FLAGS:=-Wall -Wextra -Werror -Wfloat-equal
+C_FLAGS:=-Wall -Wextra -Werror -Wfloat-equal -g3
 
 SRC_DIR:=./src
 INC_DIR:=./inc
