@@ -2,10 +2,10 @@
 
 int main()
 {
-	bdouble_t n;
-	if (scanf_bdouble(&n))
-		return SCANF_ERR;
+    bdouble_t n;
+    if (scanf_bdouble(&n))
+        return SCANF_ERR;
 
-	printf_bdouble(&n);
-	return 0;
+    printf_bdouble_mantissa(&n);
+    return 0;
 }

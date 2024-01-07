@@ -1,17 +1,15 @@
-#include <stdio.h>
 #include "big_nums.h"
 
 int main()
 {
     bdouble_t dividend = {};
-    int divisor = 0;
+    bdouble_t divisor = {};
     bdouble_t result = {};
 
-    if (scanf_bdouble(&dividend) || scanf("%d", &divisor) != 1)
+    if (scanf_bdouble(&dividend) || scanf_bdouble(&divisor) || divisor.exponent != 0)
         return SCANF_ERR;
 
-    mul_bdouble(&result, &dividend, divisor);
+    div_bdoubles(&result, &dividend, &divisor);
     printf_bdouble_mantissa(&result);
-
     return 0;
 }

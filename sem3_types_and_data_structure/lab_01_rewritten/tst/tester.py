@@ -50,32 +50,44 @@ def read_ans_from_test_file():
 
 
 def test_passed(test_n):
-	print("Test %03d: " % (test_n) + Green + "PASSED" + Color_Off)
+	...
+	# print("Test %03d: " % (test_n) + Green + "PASSED" + Color_Off)
 
 def test_failed(test_n, args, given, expected):
 	print("Test %03d: " % (test_n) + Red + "FAILED" + Color_Off)
 	print("Args: ", args)
 	print(Cyan + "%s - given result" % (given) + Color_Off)
-	print(Blue + "%32s - correct_result" % (expected) + Color_Off)
+	print(Blue + "%s - correct_result" % (expected) + Color_Off)
 
 
-def test_div_bdoubles(n_tests, max_n_digits):
+def test_div(n_tests, max_n_digits):
 	for i in range(n_tests):
-		dividend = generate_bdouble(max_n_digits)
-		divisor = generate_bint(max_n_digits)
+		d1 = generate_bdouble(max_n_digits)
+		d2 = generate_bint(max_n_digits)
 
-		result = "%32.32g" % (dividend / divisor)
+		args = "%.32g %.32g" % (d1, d2)
+		exp = "%32.32g" % (d1 / d2)
 
 		only_significant = ""
-		for char in result:
+		for char in exp:
+			if char == ' ' or char == '\n':
+				continue
 			if char == 'e':
 				break
 			if char != '.' and not (only_significant == "" and char =="0"):
 				only_significant += char
+		only_significant = only_significant[:max_n_digits];
 
-		print("%32d		%32d 	 %32s 	 %.32e" % (dividend, divisor, only_significant, dividend / divisor))
+		write_args_to_test_file(args)
+		system("./div_tester.exe < " + in_test_file + " > " + out_test_file)
+		res = read_ans_from_test_file()[:max_n_digits]
 
-def test_mul_bdouble(n_tests, max_n_digits):
+		if (res == only_significant):
+			test_passed(i + 1)
+		else:
+			test_failed(i + 1, args, res, only_significant)
+
+def test_mul(n_tests, max_n_digits):
 	for i in range(n_tests):
 		d = generate_bdouble(max_n_digits)
 		n = generate_int()
@@ -91,14 +103,14 @@ def test_mul_bdouble(n_tests, max_n_digits):
 			if char != '.' and not (only_significant == "" and char =="0"):
 				only_significant += char
 		
-		only_significant = only_significant + (32 - len(only_significant)) * '0'
+		only_significant = only_significant
 		args = "%d" % (d) + ' ' + "%d" % (n)
 
 		write_args_to_test_file(args)
 		system("./mul_tester.exe < " + in_test_file + " > " + out_test_file)
 		output = read_ans_from_test_file()
 
-		if (output == only_significant):
+		if (output == only_significant or int(only_significant[-1]) != (d % 10 * n % 10) % 10):
 			test_passed(i + 1)
 		else:
 			test_failed(i + 1, args, output, only_significant)
@@ -108,7 +120,7 @@ def test_in_out(n_tests, max_n_digits):
 		d = generate_bdouble(max_n_digits)
 		args = "%.32g" % (d)
 		exp = "%.32g" % (d)
-		exp = exp + (max_n_digits - len(exp)) * '0'
+		exp = exp
 
 		write_args_to_test_file(args)
 		system("./in_out_tester.exe < " + in_test_file + " > " + out_test_file)
@@ -119,10 +131,73 @@ def test_in_out(n_tests, max_n_digits):
 		else:
 			test_failed(i + 1, args, res, exp)
 
+def test_cmp(n_tests, max_n_digits):
+	for i in range(n_tests):
+		d1 = generate_bdouble(max_n_digits)
+		d2 = generate_bdouble(max_n_digits)
+
+		args = "%.32g %.32g" % (d1, d2)
+
+		exp = 1;
+		if (d1 == d2):
+			exp = 0
+		elif (d1 < d2):
+			exp = -1
+
+		write_args_to_test_file(args)
+		system("./cmp_tester.exe < " + in_test_file + " > " + out_test_file)
+		res = int(read_ans_from_test_file())
+		if res > 0:
+			res = 1
+		if res < 0:
+			res = -1
+
+		if (res == exp):
+			test_passed(i + 1)
+		else:
+			test_failed(i + 1, args, res, exp)
+
+def test_sub(n_tests, max_n_digits):
+	for i in range(n_tests):
+		d1 = generate_bdouble(max_n_digits)
+		d2 = generate_bdouble(max_n_digits)
+
+		if (d1 > d2):
+			args = "%.32g %.32g" % (d1, d2)
+			exp = "%.32g" % (d1 - d2)
+			exp_last = (int(("%.32g" % (d1))[-1]) - int(("%.32g" % (d2))[-1])) % 10
+		else:
+			args = "%.32g %.32g" % (d2, d1)
+			exp = "%.32g" % (d2 - d1)
+			exp_last = (int(("%.32g" % (d2))[-1]) - int(("%.32g" % (d1))[-1])) % 10
+
+		exp = exp
+
+		write_args_to_test_file(args)
+		system("./sub_tester.exe < " + in_test_file + " > " + out_test_file)
+		res = read_ans_from_test_file()
+
+		if (res == exp or int(exp[-1]) != exp_last):
+			test_passed(i + 1)
+		else:
+			test_failed(i + 1, args, res, exp)
+
+
 if __name__ == '__main__':
+	print(">>> IN_OUT_TESTING")
 	test_in_out(100, 32)
+
 	# NOTE(Talkasi): There is sometimes a bug in expected big double representation.
 	# It is because Python rounds big numbers in a different way.
 	# So each FAILED test should be cheked before considered actually FAILED.
-	test_mul_bdouble(100, 16)
+	print(">>> MUL_TESTING")
+	test_mul(1000, 16)
 
+	print(">>> CMP_TESTING")
+	test_cmp(1000, 32)
+
+	print(">>> SUB_TESTING")
+	test_sub(1000, 16)
+
+	print(">>> DIV_TESTING")
+	test_div(1000, 14)
