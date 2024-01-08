@@ -58,11 +58,13 @@ int scanf_bdouble(bdouble_t *d)
 
 void printf_bdouble(bdouble_t *d)
 {
+	if (d->sign < 0)
+		printf("-");
 	printf("%d.", get_digit(d, 0));
 	for (int i = 1; i < d->d_in_mantissa; ++i)
 		printf("%d", get_digit(d, i));
 
-	printf("e%c%02d", d->sign >= 0 ? '+' : '-', d->exponent);
+	printf("e%+03d", d->exponent);
 	printf("\n");
 }
 
@@ -132,7 +134,7 @@ int sub_bdoubles(bdouble_t *d1, bdouble_t *d2)
 
 		put_digit(d1, i, new_digit % 10);
 	}
-	
+
 	return delete_prev_zeroes(d1);
 }
 
@@ -183,11 +185,6 @@ int mul_bdouble(bdouble_t *res, bdouble_t *d, int num)
 // 			round = new_digit > 9;
 // 			put_digit(res, i, new_digit % 10);
 // 		}
-
-// 		round_bdouble(res, round) {
-// 			assert(carry + round < 10);
-// 			put_digit(res, 0, carry + round);
-// 		}
 // 	}
 // }
 
@@ -195,6 +192,9 @@ int div_bdoubles(bdouble_t *res, bdouble_t *d1, bdouble_t *d2)
 {
 	memset(res, 0, sizeof(*res));
 	res->sign = (d1->sign == d2->sign) ? 1 : -1;
+	res->exponent = d1->exponent - d2->exponent;
+	if (res->sign < 0)
+		res->exponent -= 1;
 
 	bdouble_t part_div = {};
 	init_bdouble(&part_div, d1, 0, d2->d_in_mantissa);

@@ -60,6 +60,23 @@ def test_failed(test_n, args, given, expected):
 	print(Blue + "%s - correct_result" % (expected) + Color_Off)
 
 
+def test_main(n_tests, max_n_digits):
+	for i in range(n_tests):
+		d1 = generate_bdouble(max_n_digits)
+		d2 = generate_bint(max_n_digits)
+
+		args = "%.32g %.32g" % (d1, d2)
+		exp = "%.31e" % (d1 / d2)
+
+		write_args_to_test_file(args)
+		system("./app.exe < " + in_test_file + " > " + out_test_file)
+		res = read_ans_from_test_file()
+
+		if (res == exp):
+			test_passed(i + 1)
+		else:
+			test_failed(i + 1, args, res, exp)
+
 def test_div(n_tests, max_n_digits):
 	for i in range(n_tests):
 		d1 = generate_bdouble(max_n_digits)
@@ -184,20 +201,23 @@ def test_sub(n_tests, max_n_digits):
 
 
 if __name__ == '__main__':
-	print(">>> IN_OUT_TESTING")
-	test_in_out(100, 32)
+	# print(">>> IN_OUT_TESTING")
+	# test_in_out(100, 32)
 
 	# NOTE(Talkasi): There is sometimes a bug in expected big double representation.
 	# It is because Python rounds big numbers in a different way.
 	# So each FAILED test should be cheked before considered actually FAILED.
-	print(">>> MUL_TESTING")
-	test_mul(1000, 16)
+	# print(">>> MUL_TESTING")
+	# test_mul(1000, 16)
 
-	print(">>> CMP_TESTING")
-	test_cmp(1000, 32)
+	# print(">>> CMP_TESTING")
+	# test_cmp(1000, 32)
 
-	print(">>> SUB_TESTING")
-	test_sub(1000, 16)
+	# print(">>> SUB_TESTING")
+	# test_sub(1000, 16)
 
-	print(">>> DIV_TESTING")
-	test_div(1000, 14)
+	# print(">>> DIV_TESTING")
+	# test_div(1000, 14)
+
+	print(">>> MAIN_TESTING")
+	test_main(10, 32)

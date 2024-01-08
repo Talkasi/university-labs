@@ -8,7 +8,9 @@ TST_DIR:=./tst
 
 $(shell mkdir -p $(TMP_DIR))
 
+
 .PHONY: test_all
+test_all: app.exe
 test_all: div_tester.exe
 test_all: mul_tester.exe
 test_all: in_out_tester.exe
@@ -18,6 +20,9 @@ test_all:
 	touch $(TMP_DIR)/test_in.txt $(TMP_DIR)/test_out.txt
 	python3 $(TST_DIR)/tester.py
 
+
+./app.exe: $(TMP_DIR)/main.o $(TMP_DIR)/big_nums.o
+	$(CC) $(C_FLAGS) -I$(INC_DIR) $^ -o $@
 
 ./div_tester.exe: $(TMP_DIR)/div_tester_main.o $(TMP_DIR)/big_nums.o
 	$(CC) $(C_FLAGS) -I$(INC_DIR) $^ -o $@
@@ -34,6 +39,9 @@ test_all:
 ./sub_tester.exe: $(TMP_DIR)/sub_tester_main.o $(TMP_DIR)/big_nums.o
 	$(CC) $(C_FLAGS) -I$(INC_DIR) $^ -o $@
 
+
+$(TMP_DIR)/main.o: $(SRC_DIR)/main.c $(INC_DIR)/big_nums.h 
+	$(CC) $(C_FLAGS) -I$(INC_DIR) -c $< -o $@
 
 $(TMP_DIR)/big_nums.o: $(SRC_DIR)/big_nums.c $(INC_DIR)/big_nums.h 
 	$(CC) $(C_FLAGS) -I$(INC_DIR) -c $< -o $@
