@@ -1,12 +1,5 @@
 *__pycache__
-*.png
-*.bmp
-*.jpg
-*.svg
 *.idea
-*.cmake
-*.txt
 *.exe
-*.pdf
 *.odt
 
