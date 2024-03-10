@@ -3,7 +3,7 @@
 
 err_t requests_handler(request_t &request)
 {
-    static figure_t figure;
+    static figure_t figure = init_figure();
     err_t rc;
 
     switch (request.action) {
@@ -26,7 +26,7 @@ err_t requests_handler(request_t &request)
         rc = draw_figure(figure, request.scene);
         break;
     case QUIT:
-        rc = UNDEFINED_COMMAND;
+        rc = free_figure(figure);
         break;
     default:
         rc = UNDEFINED_COMMAND;

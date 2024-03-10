@@ -259,12 +259,12 @@
              </font>
             </property>
             <property name="text">
-             <string>∠ по x</string>
+             <string>yaw°</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1" colspan="2">
-           <widget class="QDoubleSpinBox" name="InputYTurn">
+           <widget class="QDoubleSpinBox" name="InputPitchTurn">
             <property name="minimum">
              <double>-1000.000000000000000</double>
             </property>
@@ -293,7 +293,7 @@
              </font>
             </property>
             <property name="text">
-             <string>∠ по z</string>
+             <string>roll°</string>
             </property>
            </widget>
           </item>
@@ -317,12 +317,12 @@
              </font>
             </property>
             <property name="text">
-             <string>∠ по y</string>
+             <string>pitch°</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1" colspan="2">
-           <widget class="QDoubleSpinBox" name="InputZTurn">
+           <widget class="QDoubleSpinBox" name="InputRollTurn">
             <property name="minimum">
              <double>-1000.000000000000000</double>
             </property>
@@ -351,7 +351,7 @@
            </widget>
           </item>
           <item row="0" column="1" colspan="2">
-           <widget class="QDoubleSpinBox" name="InputXTurn">
+           <widget class="QDoubleSpinBox" name="InputYawTurn">
             <property name="minimum">
              <double>-1000.000000000000000</double>
             </property>

@@ -48,6 +48,9 @@ else()
             figure/edges.h figure/edges.cpp
             draw/draw.h draw/draw.cpp
             errors/errors.cpp
+            figure/point.h figure/point.cpp
+            figure/edge.h figure/edge.cpp
+            tools/tools.h tools/tools.cpp
         )
     endif()
 endif()
@@ -59,6 +62,7 @@ target_include_directories(lab_01
   errors/
   figure/
   draw/
+  tools/
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -17,17 +17,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    err_t draw();
     void on_LoadFile_clicked();
     void on_SaveFile_clicked();
     void on_GetFileInfo_clicked();
     void on_GetProgramInfo_clicked();
 
+
+private slots:
+
     void on_buttonMove_clicked();
     void on_buttonTurn_clicked();
     void on_buttonScale_clicked();
-
-    err_t draw();
 
 private:
     Ui::MainWindow *ui;

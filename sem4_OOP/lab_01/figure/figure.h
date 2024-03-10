@@ -16,8 +16,9 @@ struct figure
 
 typedef struct figure figure_t;
 
-// figure_t &init_figure(void);
+figure_t &init_figure();
 
+err_t free_figure(figure_t &figure);
 err_t move_figure(figure_t &figure, const move_t &move);
 err_t scale_figure(figure_t &figure, const scale_t &scale);
 err_t rotate_figure(figure_t &figure, const rotate_t &rotate);

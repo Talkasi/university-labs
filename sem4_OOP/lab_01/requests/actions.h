@@ -10,9 +10,9 @@ struct move
 
 struct rotate
 {
-    double angleX;
-    double angleY;
-    double angleZ;
+    double yaw;
+    double pitch;
+    double roll;
 };
 
 struct scale

@@ -1,6 +1,17 @@
 #include "draw.h"
 #include <QLine>
 
+
+line_2D_t line_2D_default(void)
+{
+    return line_2D_t{0, 0};
+}
+
+line_3D_t line_3D_default(void)
+{
+    return line_3D_t{0, 0};
+}
+
 err_t draw_line2D(const point_2D_t &first_point, 
                   const point_2D_t &second_point, const scene_t &scene)
 {
@@ -84,11 +95,11 @@ err_t draw_edges(const edges_t &edges, const points_3D_t &points, const scene_t 
     err_t rc = SUCCESS;
 
     for (size_t i = 0; (i < edges.n) && (rc == SUCCESS); ++i) {
-        line_3D_t line3D = {};
+        line_3D_t line3D = line_3D_default();
         rc = get_line3D_points(line3D, edges.data[i], points);
 
         if (rc == SUCCESS) {
-            line_2D_t line2D = {};
+            line_2D_t line2D = line_2D_default();
             rc = convert_line(line2D, line3D, scene);
 
             if (rc == SUCCESS)
@@ -101,6 +112,7 @@ err_t draw_edges(const edges_t &edges, const points_3D_t &points, const scene_t 
 
 err_t draw_figure(const figure_t &figure, const scene_t &scene)
 {
+    scene.scene->clear();
     err_t rc = draw_edges(figure.edges, figure.points, scene);
     return rc;
 }

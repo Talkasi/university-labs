@@ -27,6 +27,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 MainWindow::~MainWindow()
 {
     delete ui;
+    request_t request;
+    request.action = QUIT;
+
+    err_t rc = requests_handler(request);
+    if (rc != SUCCESS)
+        error_message(rc);
 }
 
 void MainWindow::on_GetFileInfo_clicked()
@@ -114,9 +120,9 @@ void MainWindow::on_buttonTurn_clicked()
     request_t request;
     request.action = ROTATE;
     request.rotate = {
-        .angleX = ui->InputXTurn->value(),
-        .angleY = ui->InputYTurn->value(),
-        .angleZ = ui->InputZTurn->value()
+        .yaw = ui->InputYawTurn->value(),
+        .pitch = ui->InputPitchTurn->value(),
+        .roll = ui->InputRollTurn->value()
     };
 
     err_t rc = requests_handler(request);
