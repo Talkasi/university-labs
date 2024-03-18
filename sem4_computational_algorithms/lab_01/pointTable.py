@@ -37,34 +37,4 @@ def printPointsTable(pointsTable):
 	print("└────────────────┴────────────────┴────────────────┴────────────────┘")
 
 
-def find_x_pos(pointsTable, x):
-	pointsTableLen = len(pointsTable)
-	n_before = pointsTableLen
-	n_after = 0
-	for i in range(pointsTableLen):
-		if pointsTable[i].x > x:
-			n_before = i
-			n_after = pointsTableLen - i
-			break
 
-	return n_before, n_after
-
-
-def formPointsTableByXandN(pointsTable, x, n):
-	if (n > len(pointsTable)):
-		return None
-
-	n_before, n_after = find_x_pos(pointsTable, x)
-	half = round(n / 2);
-	l_i = n_before - half
-	r_i = n_before + (n - half)
-
-	while (l_i < 0):
-		l_i += 1
-		r_i += 1
-
-	while (r_i > len(pointsTable)):
-		l_i -= 1
-		r_i -= 1
-
-	return pointsTable[l_i : r_i]
